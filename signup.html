@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Join SPCO | Enrollment</title>
+<link rel="icon" href="./assets/images/spco_black.png" media="(prefers-color-scheme: light)">
+<link rel="icon" href="./assets/images/spco_white.png" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="/assets/images/spco_black.png">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Zhi+Mang+Xing&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<link rel="stylesheet" href="styles/index.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    ink: '#1a1a1a',
+                    parchment: '#f5f0e8',
+                    rice: '#faf7f2',
+                    warmgray: '#e8e3da',
+                    accent: '#8b2500',
+                    gold: '#c4a35a',
+                },
+                fontFamily: {
+                    brush: ['"Zhi Mang Xing"', 'cursive'],
+                    body: ['"Noto Sans SC"', 'sans-serif'],
+                    english: ['"Inter"', 'sans-serif'],
+                }
+            }
+        }
+    }
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:       #0d0d0a;
+    --parchment: #f7f3ec;
+    --warmgray:  #e8e3da;
+    --muted:     #8a837a;
+    --accent:    #9e2016;
+    --gold:      #c9a84c;
+    --moss:      #5c6b4a;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Paper grain */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)' opacity='0.032'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Watermark */
+  .watermark {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .watermark span {
+    font-family: 'Zhi Mang Xing', cursive;
+    font-size: clamp(16rem, 38vw, 34rem);
+    color: rgba(13,13,10,0.02);
+    user-select: none; white-space: nowrap; line-height: 1;
+  }
+
+  /* Layout */
+  .page-wrap {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.5rem;
+  }
+
+  /* Card */
+  .card {
+    width: 100%; max-width: 880px;
+    background: rgba(247,243,236,0.94);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(13,13,10,0.08);
+    box-shadow:
+      0 6px 24px rgba(22, 22, 17, 0.03),
+      0 8px 24px rgba(13,13,10,0.06),
+      0 28px 56px rgba(13,13,10,0.04);
+    display: grid;
+    grid-template-columns: 210px 1fr;
+    overflow: hidden;
+    animation: cardIn 0.65s cubic-bezier(0.22,1,0.36,1) both;
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Sidebar */
+  .sidebar {
+    background: #e3dacc59;;
+    border-right: 1px solid rgba(13,13,10,0.06);
+    padding: 2.5rem 1.75rem;
+    display: flex; flex-direction: column;
+  }
+
+  .sidebar-label {
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 4px;
+  }
+  .sidebar-year {
+    font-size: 9.5px; letter-spacing: 0.13em;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 3rem;
+  }
+
+  .steps-nav { display: flex; flex-direction: column; gap: 1.75rem; flex: 1; }
+
+  .step-item { display: flex; align-items: center; gap: 11px; }
+
+  .step-dot {
+    width: 5px; height: 5px;
+    background: rgba(13,13,10,0.14);
+    flex-shrink: 0;
+    transition: background 0.35s ease, transform 0.35s ease;
+  }
+  .step-item.active .step-dot { background: var(--accent); transform: scale(1.7); }
+  .step-item.done   .step-dot { background: var(--moss); }
+
+  .step-name {
+    font-size: 9.5px; font-weight: 600;
+    letter-spacing: 0.17em; text-transform: uppercase;
+    color: var(--muted);
+    transition: color 0.3s ease;
+  }
+  .step-item.active .step-name { color: var(--ink); }
+  .step-item.done   .step-name { color: var(--moss); }
+
+  .sidebar-footer {
+    font-size: 14px; line-height: 1.75;
+    color: rgba(13,13,10,0.3);
+    letter-spacing: 0.06em;
+    margin-top: auto; padding-top: 2rem;
+  }
+
+  /* Form area */
+  .form-area {
+    padding: 3rem 3.25rem;
+    display: flex; flex-direction: column;
+    min-height: 520px;
+  }
+
+  /* Step panels */
+  .step-panel {
+    display: none; flex-direction: column; gap: 2.25rem; flex: 1;
+  }
+  .step-panel.active {
+    display: flex;
+    animation: stepIn 0.38s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  @keyframes stepIn {
+    from { opacity: 0; transform: translateX(10px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .step-header h2 {
+    font-size: 1.7rem; font-weight: 300;
+    letter-spacing: -0.02em; color: var(--ink);
+    line-height: 1.2; margin-bottom: 0.35rem;
+  }
+  .step-header h2 strong { font-weight: 600; }
+  .step-header p {
+    font-size: 0.8rem; color: var(--muted);
+    font-weight: 300; line-height: 1.6;
+  }
+
+  /* Fields */
+  .fields { display: flex; flex-direction: column; gap: 2rem; flex: 1; }
+
+  .field-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 0.45rem; }
+
+  .field label {
+    font-size: 8.5px; font-weight: 700;
+    letter-spacing: 0.17em; text-transform: uppercase;
+    color: var(--muted);
+    transition: color 0.25s;
+  }
+  .field:focus-within label { color: var(--accent); }
+
+  .field input,
+  .field select,
+  .field textarea {
+    background: transparent; border: none;
+    border-bottom: 1px solid rgba(13,13,10,0.16);
+    padding: 0.45rem 0;
+    font-size: 0.9375rem; font-family: 'Lora', serif;
+    font-weight: 300; color: var(--ink);
+    outline: none; width: 100%;
+    transition: border-color 0.28s ease, box-shadow 0.28s ease;
+    appearance: none; -webkit-appearance: none;
+  }
+  .field input::placeholder,
+  .field textarea::placeholder { color: rgba(13,13,10,0.2); font-weight: 300; }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-bottom-color: var(--accent);
+    box-shadow: 0 1.5px 0 -0.5px var(--accent);
+  }
+  .field textarea { resize: none; line-height: 1.65; }
+
+  /* Select chevron */
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: '';
+    position: absolute; right: 2px; top: 44%;
+    width: 6px; height: 6px;
+    border-right: 1px solid var(--muted);
+    border-bottom: 1px solid var(--muted);
+    transform: rotate(45deg);
+    pointer-events: none;
+  }
+
+  /* PDPA */
+  .pdpa-block {
+    display: flex; align-items: flex-start; gap: 1rem;
+    padding: 1.1rem 1.25rem;
+    background: rgba(13,13,10,0.025);
+    border-left: 1.5px solid var(--accent);
+  }
+  .pdpa-block input[type="checkbox"] {
+    width: 13px; height: 13px;
+    border: 1px solid var(--muted); border-radius: 0;
+    appearance: none; -webkit-appearance: none;
+    flex-shrink: 0; margin-top: 3px; cursor: pointer;
+    position: relative;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .pdpa-block input[type="checkbox"]:checked {
+    background: var(--accent); border-color: var(--accent);
+  }
+  .pdpa-block input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute; left: 2px; top: 0px;
+    width: 5px; height: 8px;
+    border-right: 1.5px solid white;
+    border-bottom: 1.5px solid white;
+    transform: rotate(45deg);
+  }
+  .pdpa-block label {
+    font-size: 0.72rem; line-height: 1.72;
+    color: var(--muted); cursor: pointer;
+  }
+  .pdpa-block label strong { color: var(--ink); font-weight: 500; }
+
+  .link-text {
+      color: var(--accent) !important;
+      text-decoration: none !important;
+      border-bottom: 1px solid rgba(158,32,22,0.25) !important;
+      transition: border-color 0.2s, color 0.2s !important;
+  }
+
+  /* Controls */
+  .form-controls {
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid rgba(13,13,10,0.06);
+    padding-top: 1.75rem; margin-top: 1.75rem;
+  }
+
+  .btn-prev {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted); background: none; border: none;
+    cursor: pointer; padding: 0.4rem 0;
+    transition: color 0.2s;
+  }
+  .btn-prev:hover { color: var(--ink); }
+  .btn-prev.hidden { visibility: hidden; pointer-events: none; }
+
+  .btn-prev svg, .btn-next svg, .btn-submit svg {
+    width: 13px; height: 13px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+
+  .btn-next, .btn-submit {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 10px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 0.7rem 1.5rem; border: none; cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.2s;
+  }
+
+  .btn-next {
+    background: var(--ink); color: var(--parchment);
+    box-shadow: 2px 2px 0 0 rgba(13,13,10,0.18);
+  }
+  .btn-next:hover  { transform: translate(-2px,-2px); box-shadow: 4px 4px 0 0 rgba(13,13,10,0.2); }
+  .btn-next:active { transform: translate(0,0); box-shadow: 0 0 0 0; }
+
+  .btn-submit {
+    background: var(--accent); color: #fff;
+    box-shadow: 2px 2px 0 0 rgba(158,32,22,0.28);
+  }
+  .btn-submit:hover  { transform: translate(-2px,-2px); box-shadow: 4px 4px 0 0 rgba(158,32,22,0.28); background: #b02419; }
+  .btn-submit:active { transform: translate(0,0); box-shadow: 0 0 0 0; }
+  .btn-submit.hidden { display: none; }
+  .btn-submit:disabled { opacity: 0.55; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+  /* Spinning badge */
+  .spin-badge {
+    position: fixed; bottom: 1.75rem; right: 1.75rem;
+    width: 84px; height: 84px;
+    pointer-events: none; z-index: 10;
+  }
+  .spin-badge svg { animation: badgeSpin 18s linear infinite; display: block; }
+  @keyframes badgeSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .spin-badge img {
+    position: absolute; inset: 0; margin: auto;
+    width: 30px; height: 30px;
+    object-fit: contain; opacity: 0.65;
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 660px) {
+    .page-wrap { padding: 0; align-items: stretch; }
+
+    .card {
+      grid-template-columns: 1fr;
+      min-height: 100dvh;
+      border: none; box-shadow: none; border-radius: 0;
+    }
+
+    .sidebar {
+      flex-direction: row; align-items: center;
+      justify-content: space-between; flex-wrap: wrap;
+      border-right: none;
+      border-bottom: 1px solid rgba(13,13,10,0.06);
+      padding: 1.1rem 1.25rem; gap: 0.75rem;
+    }
+    .sidebar-year { margin-bottom: 0; }
+    .sidebar-footer { display: none; }
+    .steps-nav { flex-direction: row; gap: 1rem; flex: none; }
+    .step-name { display: none; }
+
+    .form-area { padding: 1.75rem 1.25rem; flex: 1; }
+    .field-row { grid-template-columns: 1fr; gap: 2rem; }
+    .step-header h2 { font-size: 1.35rem; }
+
+    .spin-badge { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<script src="./scripts/navbar.js"></script>
+
+<spco-navbar></spco-navbar>
+
+<div class="watermark"><span>华</span></div>
+
+<div class="page-wrap">
+  <div class="card">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div>
+        <p class="sidebar-label" style="letter-spacing: 0.15em; line-height: 0.8em;" data-i18n="signup_label">Enrollment</p>
+        <p class="sidebar-year" id="academicYear" data-i18n="signup_year" id="academicYear">academic year</p>
+      </div>
+      <nav class="steps-nav">
+        <div class="step-item" id="si-1">
+          <div class="step-dot"></div>
+          <span class="step-name" data-i18n="signup_step1">Personal</span>
+        </div>
+        <div class="step-item" id="si-2">
+          <div class="step-dot"></div>
+          <span class="step-name" data-i18n="signup_step2">Musical</span>
+        </div>
+        <div class="step-item" id="si-3">
+          <div class="step-dot"></div>
+          <span class="step-name" data-i18n="signup_step3">General</span>
+        </div>
+      </nav>
+      <p class="sidebar-footer" style="font-family: 'Lora', serif;" data-i18n="signup_footer_quote">The Place Where Dream Starts 。</p>
+    </aside>
+
+    <!-- Form -->
+    <section class="form-area">
+      <form id="signupForm" action="https://script.google.com/macros/s/AKfycbz3I7C4AQ3pd5ieMDpWwGAYXz09G1uch6SfzeJWs2eZUPrkafsflASBeg42nfRk7MmuTQ/exec" method="POST">
+
+        <!-- Step 1: Identity -->
+        <div class="step-panel" id="step-1">
+          <div class="step-header">
+            <h2><strong data-i18n="signup_h1">Personal Information</strong></h2>
+            <p style="font-family: 'Lora', serif;" data-i18n="signup_sub1">Please provide your personal details to begin.</p>
+          </div>
+          <div class="fields">
+            <div class="field">
+              <label for="f-name" data-i18n="signup_name_label">Full Name</label>
+              <input id="f-name" name="name" type="text" placeholder="Enter your full legal name" required autocomplete="name"/>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="f-sid" data-i18n="signup_sid_label">Student ID</label>
+                <input id="f-sid" name="student_id" type="text" placeholder="Pxxxxxxx" required/>
+              </div>
+              <div class="field">
+                <label for="f-phone" data-i18n="signup_phone_label">Phone Number</label>
+                <input id="f-phone" name="phone" type="tel" placeholder="xxxx xxxx" required autocomplete="tel"/>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Background -->
+        <div class="step-panel" id="step-2">
+          <div class="step-header">
+            <h2><strong data-i18n="signup_h2">Experience &amp; Interest</strong></h2>
+            <p style="font-family: 'Lora', serif;" data-i18n="signup_sub2">Your artistic background helps us curate your placement.</p>
+          </div>
+          <div class="fields">
+            <div class="field">
+              <label for="f-instrument" data-i18n="signup_instrument_label">Instrument You Play</label>
+              <input id="f-instrument" name="experience_instrument" type="text" placeholder="Primary Instrument You Play (can put NA)" required/>
+            </div>
+            <div class="field">
+              <label for="f-years" data-i18n="signup_years_label">Years of Experience</label>
+              <input id="f-years" name="experience_years" type="text" placeholder="Please Put an Integer (For Example: 2)" required/>
+            </div>
+<!-- Sectional Interest — 自定义 Dropdown -->
+<div class="field" id="section-field">
+  <label data-i18n="signup_section_label">Sectional Interest</label>
+
+  <!-- 隐藏的真实input，用于表单提交 -->
+  <input type="hidden" name="section" id="section-value" required/>
+
+  <!-- 触发器 -->
+  <button type="button" id="section-trigger"
+    style="
+      background:transparent; border:none; border-bottom:1px solid rgba(13,13,10,0.16);
+      padding:0.45rem 0; width:100%; text-align:left; cursor:pointer;
+      font-size:0.9375rem; font-family:'Lora',serif; font-weight:300;
+      color:rgba(13,13,10,0.22);
+      display:flex; justify-content:space-between; align-items:center;
+      transition: border-color 0.28s ease;
+    "
+    aria-haspopup="listbox" aria-expanded="false">
+    <span id="section-display" data-i18n="signup_section_placeholder" id="section-display">Select a Section</span>
+    <svg id="section-chevron" width="12" height="12" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="1.8"
+      stroke-linecap="round" stroke-linejoin="round"
+      style="color:var(--muted); flex-shrink:0; transition:transform 0.3s ease;">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+  </button>
+
+  <!-- 下拉面板 -->
+  <div id="section-panel"
+    style="
+      position:relative; overflow:hidden; height:0;
+      border-left:1.5px solid rgba(13,13,10,0.08);
+      margin-top:2px;
+    ">
+    <ul role="listbox" style="padding:0.5rem 0; list-style:none; margin:0;">
+      <!-- option: 每一个选项 -->
+      <li role="option" data-value="huqin" data-label="Bowed Strings (Huqin)" class="section-option"></li>
+      <li role="option" data-value="cellobass" data-label="Bowed Strings (Cello &amp; Bass)" class="section-option"></li>
+      <li role="option" data-value="pluckings" data-label="Plucked Strings" class="section-option"></li>
+      <li role="option" data-value="dizi" data-label="Woodwinds (Dizi)" class="section-option"></li>
+      <li role="option" data-value="shengsuo" data-label="Woodwinds (Sheng &amp; SuoNa)" class="section-option"></li>
+      <li role="option" data-value="percussion" data-label="Percussion" class="section-option"></li>
+    </ul>
+  </div>
+</div>
+          </div>
+        </div>
+
+        <!-- Step 3: Declaration -->
+        <div class="step-panel" id="step-3">
+          <div class="step-header">
+            <h2><strong data-i18n="signup_h3">Final Remarks</strong></h2>
+            <p style="font-family: 'Lora', serif;" data-i18n="signup_sub3">Review and submit your formal application.</p>
+          </div>
+          <div class="fields">
+            <div class="field">
+              <label for="f-questions" data-i18n="signup_q_label">Questions</label>
+              <textarea id="f-questions" name="questions" rows="2" placeholder="Any specific requirements or inquiries?"></textarea>
+            </div>
+            <div class="field">
+              <label for="f-suggestions" data-i18n="signup_s_label">Suggestions</label>
+              <textarea id="f-suggestions" name="suggestions" rows="2" placeholder="Suggestions for booth or performance at CCA carnival?"></textarea>
+            </div>
+            <div class="pdpa-block">
+              <input id="pdpa" name="pdpa" type="checkbox" required/>
+              <label for="pdpa" id="pdpa-label">
+                I acknowledge that I have read and understood the <a href="./privacy.html" class="link-text" data-i18n="signup_privacy_link">Privacy Statement</a>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="form-controls">
+          <button type="button" class="btn-prev" id="prevBtn">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            <span data-i18n="signup_prev">Previous</span>
+          </button>
+          <div style="display:flex;gap:0.6rem;">
+            <button type="button" class="btn-next" id="nextBtn">
+              <span data-i18n="signup_next">Next Stage</span>
+              <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+            <button type="submit" class="btn-submit hidden" id="submitBtn">
+              <span data-i18n="signup_submit">Submit</span>
+              <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </section>
+  </div>
+</div>
+
+<!-- 转圈圈 (你改的，保留) -->
+<div class="fixed mb-6 bottom-20 right-8 pointer-events-none hidden md:block">
+<div class="relative w-24 h-24">
+<svg class="absolute inset-0 animate-spin-slow" style="animation: spin 20s linear infinite;" viewbox="0 0 100 100">
+<defs>
+<path d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" id="circlePath"></path>
+</defs>
+<text class="text-[8px] uppercase tracking-[0.2em] font-bold fill-on-surface-variant/40" style="font-size:8px;font-family:'Inter',sans-serif;font-weight:600;letter-spacing:0.19em;fill:rgba(13,13,10,0.32);text-transform:uppercase;">
+<textpath xlink:href="#circlePath">SINGAPORE POLY * CHINESE ORCHESTRA *</textpath>
+</text>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<img src="./assets/images/spco.png" alt="華樂"  class="mx-auto max-h-[5vh] max-w-[6vw] block">
+</div>
+</div>
+</div>
+
+   <div class="footer-drawer footer-torn" id="footerDrawer">
+        <!-- Tab to reveal -->
+        <div class="footer-drawer-tab bg-ink" id="footerTab">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#faf7f2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-500" id="footerArrow">
+                <polyline points="18 15 12 9 6 15"/>
+            </svg>
+        </div>
+
+        <!-- Footer content -->
+        <div class="bg-ink text-rice/70 px-6 py-10 md:py-14">
+            <div class="max-w-5xl mx-auto">
+                <div class="grid sm:grid-cols-2 md:grid-cols-5 gap-8">
+                    
+                    <div class="md:col-span-2">
+                        <p class="font-brush text-2xl text-rice/90 mb-4">新加坡理工华乐团</p>
+                        <p class="text-xs text-rice/30 leading-relaxed whitespace-pre-line" data-i18n="footer_brand_desc">© Singapore Poly Chinese Orchestra</p>
+                    </div>
+
+                    <!-- Social -->
+                    <div>
+                        <p class="text-xs uppercase tracking-widest text-rice/30 mb-4" data-i18n="footer_social">Follow Us</p>
+                        <div class="space-y-3">
+                            <a href="https://instagram.com/spcotv" target="_blank" rel="noopener" class="flex items-center gap-3 text-sm text-rice/50 hover:text-rice transition-colors group">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                                Instagram
+                            </a>
+                            <a href="https://www.youtube.com/@SingaporePolyChineseOrchestra" target="_blank" rel="noopener" class="flex items-center gap-3 text-sm text-rice/50 hover:text-rice transition-colors group">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7.1c.3-1.3 1.4-2.4 2.7-2.7C8.1 4 12 4 12 4s3.9 0 6.8.4c1.3.3 2.4 1.4 2.7 2.7.4 1.5.4 4.8.4 4.8s0 3.3-.4 4.8c-.3 1.3-1.4 2.4-2.7 2.7-2.9.4-6.8.4-6.8.4s-3.9 0-6.8-.4c-1.3-.3-2.4-1.4-2.7-2.7-.4-1.5-.4-4.8-.4-4.8s0-3.3.4-4.8Z"/><path d="m10 15 5-3-5-3v6Z"/></svg>
+                                YouTube
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Contact -->
+                    <div>
+                        <p class="text-xs uppercase tracking-widest text-rice/30 mb-4" data-i18n="footer_contact">Contact</p>
+                        <div class="space-y-3 flex flex-col">
+                            <a href="/cdn-cgi/l/email-protection#b0c3c0efd3dff0d9d3d8d1c49ec3c09ed5d4c59ec3d7" class="text-sm text-rice/50 hover:text-rice transition-colors">Email Us</a>
+                            <a href="https://www.sp.edu.sg/student-life/ccas/our-clubs/arts-culture/sp-chinese-orchestra" class="text-sm text-rice/50 hover:text-rice transition-colors">SP website</a>
+                        </div>
+                    </div>
+
+                    <!-- Credits -->
+                    <div>
+                        <p class="text-xs uppercase tracking-widest text-rice/30 mb-4" data-i18n="footer_credits">Information</p>
+                        <div class="space-y-3 flex flex-col">
+                            <a href="https://yuyiyang.me" class="text-sm text-rice/50 hover:text-rice transition-colors" data-i18n="footer_author">About the Author</a>
+                            <a href="./privacy.html" class="text-sm text-rice/50 hover:text-rice transition-colors" data-i18n="footer_privacy">Privacy Statement</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- =============================================
+             JAVASCRIPT
+             ============================================= -->
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+
+  // ── i18n ──
+  const signupTranslations = {
+    en: {
+      signup_label:            'Enrollment',
+      signup_year:             'academic year',
+      signup_step1:            'Personal',
+      signup_step2:            'Musical',
+      signup_step3:            'General',
+      signup_footer_quote:     'The Place Where Dream Starts 。',
+      signup_h1:               'Personal Information',
+      signup_sub1:             'Please provide your personal details to begin.',
+      signup_name_label:       'Full Name',
+      signup_sid_label:        'Student ID',
+      signup_phone_label:      'Phone Number',
+      signup_h2:               'Experience & Interest',
+      signup_sub2:             'Your artistic background helps us curate your placement.',
+      signup_instrument_label: 'Instrument You Play',
+      signup_years_label:      'Years of Experience',
+      signup_section_label:    'Sectional Interest',
+      signup_section_placeholder: 'Select a Section',
+      signup_h3:               'Final Remarks',
+      signup_sub3:             'Review and submit your formal application.',
+      signup_q_label:          'Questions',
+      signup_s_label:          'Suggestions',
+      signup_pdpa:             'I acknowledge that I have read and understood the',
+      signup_privacy_link:     'Privacy Statement',
+      signup_prev:             'Previous',
+      signup_next:             'Next Stage',
+      signup_submit:           'Submit',
+      signup_submitting:       'Submitting…',
+      // placeholders
+      ph_name:       'Enter your full legal name',
+      ph_sid:        'Pxxxxxxx',
+      ph_phone:      'xxxx xxxx',
+      ph_instrument: 'Primary Instrument You Play (can put NA)',
+      ph_years:      'Please Put an Integer (For Example: 2)',
+      ph_questions:  'Any specific requirements or inquiries?',
+      ph_suggestions:'Suggestions for booth or performance at CCA carnival?',
+      // dropdown options
+      opt_huqin:    'Bowed Strings (Huqin)',
+      opt_ciallobass:'Bowed Strings (Cello & Bass)',
+      opt_pluckings: 'Plucked Strings',
+      opt_dizi:      'Woodwinds (Dizi)',
+      opt_shengsuo:  'Woodwinds (Sheng & SuoNa)',
+      opt_percussion:'Percussion',
+    },
+    zh: {
+      signup_label:            '报名',
+      signup_year:             '学年',
+      signup_step1:            '个人',
+      signup_step2:            '音乐',
+      signup_step3:            '声明',
+      signup_footer_quote:     '梦想启航之地 。',
+      signup_h1:               '个人资料',
+      signup_sub1:             '请填写您的个人信息以开始报名。',
+      signup_name_label:       '姓名',
+      signup_sid_label:        '学号',
+      signup_phone_label:      '手机号码',
+      signup_h2:               '音乐背景与意向',
+      signup_sub2:             '您的音乐背景将帮助我们为您安排合适的声部。',
+      signup_instrument_label: '所学乐器',
+      signup_years_label:      '学习年限',
+      signup_section_label:    '声部意向',
+      signup_section_placeholder: '选择声部',
+      signup_h3:               '备注与声明',
+      signup_sub3:             '请确认信息并提交您的申请。',
+      signup_q_label:          '问题',
+      signup_s_label:          '建议',
+      signup_pdpa:             '我确认已阅读并理解',
+      signup_privacy_link:     '隐私声明',
+      signup_prev:             '上一步',
+      signup_next:             '下一步',
+      signup_submit:           '提交',
+      signup_submitting:       '提交中…',
+      // placeholders
+      ph_name:       '请输入您的法定全名',
+      ph_sid:        'Pxxxxxxx',
+      ph_phone:      'xxxx xxxx',
+      ph_instrument: '您的主要乐器（没有可填 NA）',
+      ph_years:      '请填写整数（例如：2）',
+      ph_questions:  '有任何特殊要求或疑问？',
+      ph_suggestions:'对报名摊位或演出活动有何建议？',
+      // dropdown options
+      opt_huqin:     '拉弦乐器（胡琴组）',
+      opt_ciallobass:'拉弦乐器（提琴组）',
+      opt_pluckings: '弹拨乐器',
+      opt_dizi:      '吹管乐器（笛箫组）',
+      opt_shengsuo:  '吹管乐器（笙唢组）',
+      opt_percussion:'打击乐器',
+    }
+  };
+
+  // dropdown option value → translation key mapping
+  const sectionOptMap = {
+    huqin: 'opt_huqin', ciallobass: 'opt_ciallobass',
+    pluckings: 'opt_pluckings', dizi: 'opt_dizi',
+    shengsuo: 'opt_shengsuo', percussion: 'opt_percussion',
+  };
+
+  let currentLang = localStorage.getItem('spco_lang') || 'en';
+
+  function switchLang(lang) {
+    currentLang = lang;
+    localStorage.setItem('spco_lang', lang);
+    const t = signupTranslations[lang];
+
+    // Update all data-i18n elements (text only, no links)
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (t[key] !== undefined && el.tagName !== 'A') el.textContent = t[key];
+    });
+
+    // Links (Privacy Statement)
+    document.querySelectorAll('a[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (t[key]) el.textContent = t[key];
+    });
+
+    // PDPA label — rebuild with translated link
+    const pdpaLabel = document.getElementById('pdpa-label');
+    if (pdpaLabel) {
+      pdpaLabel.innerHTML = t.signup_pdpa + ' <a href="./privacy.html" class="link-text" data-i18n="signup_privacy_link">' + t.signup_privacy_link + '</a>';
+    }
+
+    // Academic year label
+    const y = new Date().getFullYear();
+    const s = String(y).slice(-2), n = String(y+1).slice(-2);
+    const ayEl = document.getElementById('academicYear');
+    if (ayEl) ayEl.textContent = (lang === 'zh' ? `学年 ${s}/${n}` : `academic year ${s}/${n}`);
+
+    // Placeholders
+    const phMap = {
+      'f-name': 'ph_name', 'f-sid': 'ph_sid', 'f-phone': 'ph_phone',
+      'f-instrument': 'ph_instrument', 'f-years': 'ph_years',
+      'f-questions': 'ph_questions', 'f-suggestions': 'ph_suggestions',
+    };
+    Object.entries(phMap).forEach(([id, key]) => {
+      const el = document.getElementById(id);
+      if (el && t[key]) el.placeholder = t[key];
+    });
+
+    // Dropdown display text (if already selected, update display)
+    const hidden = document.getElementById('section-value');
+    const display = document.getElementById('section-display');
+    if (hidden && display) {
+      if (hidden.value && sectionOptMap[hidden.value]) {
+        display.textContent = t[sectionOptMap[hidden.value]] || display.textContent;
+      } else {
+        display.textContent = t.signup_section_placeholder || 'Select a Section';
+      }
+    }
+
+    // Dropdown option labels
+    document.querySelectorAll('.section-option').forEach(opt => {
+      const key = sectionOptMap[opt.dataset.value];
+      if (key && t[key]) opt.textContent = t[key];
+    });
+
+    // Lang button active state
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      const active = btn.dataset.langValue === lang;
+      btn.style.background = active ? 'var(--ink)' : 'transparent';
+      btn.style.color = active ? '#f7f3ec' : 'var(--muted)';
+      btn.style.borderColor = active ? 'var(--ink)' : 'rgba(13,13,10,0.2)';
+    });
+  }
+
+  // Init with saved or default lang
+  switchLang(currentLang);
+
+  // Academic year
+  (function(){
+    const y = new Date().getFullYear();
+    const s = String(y).slice(-2), n = String(y+1).slice(-2);
+    // academicYear is now set by switchLang()
+  })();
+
+  // Step machine
+  let current = 1;
+  const TOTAL = 3;
+  const prevBtn   = document.getElementById('prevBtn');
+  const nextBtn   = document.getElementById('nextBtn');
+  const submitBtn = document.getElementById('submitBtn');
+  const form      = document.getElementById('signupForm');
+
+  function goTo(step) {
+    document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.step-item').forEach((item, i) => {
+      item.classList.remove('active','done');
+      if (i + 1 < step)  item.classList.add('done');
+      if (i + 1 === step) item.classList.add('active');
+    });
+
+    const panel = document.getElementById(`step-${step}`);
+    panel.classList.remove('active');
+    void panel.offsetWidth;
+    panel.classList.add('active');
+
+    prevBtn.classList.toggle('hidden', step === 1);
+    nextBtn.classList.toggle('hidden', step === TOTAL);
+    submitBtn.classList.toggle('hidden', step !== TOTAL);
+    current = step;
+  }
+
+  function validateCurrent() {
+    const panel = document.getElementById(`step-${current}`);
+    const required = panel.querySelectorAll('[required]');
+    for (const el of required) {
+      if (el.type === 'checkbox' && !el.checked) { el.focus(); return false; }
+      if (el.type !== 'checkbox' && !el.value.trim()) { el.focus(); return false; }
+    }
+    return true;
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if (validateCurrent() && current < TOTAL) goTo(current + 1);
+  });
+  prevBtn.addEventListener('click', () => {
+    if (current > 1) goTo(current - 1);
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!validateCurrent()) return;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = signupTranslations[currentLang].signup_submitting || 'Submitting…';
+    try {
+      await fetch(form.action, { method: 'POST', body: new FormData(form), mode: 'no-cors' });
+    } catch(_) {}
+    setTimeout(() => { window.location.href = 'https://mysas2.sp.edu.sg/psc/csprdstu/EMPLOYEE/SA/c/A_CLUB_MEMBER.A_SC_CLBSGNWTHD.GBL?&'; }, 800);
+  });
+
+  // ── Custom Sectional Dropdown ──
+(function () {
+  const trigger   = document.getElementById('section-trigger');
+  const panel     = document.getElementById('section-panel');
+  const display   = document.getElementById('section-display');
+  const chevron   = document.getElementById('section-chevron');
+  const hidden    = document.getElementById('section-value');
+  const options   = document.querySelectorAll('.section-option');
+  let isOpen      = false;
+
+  // 给每个option写样式和文字
+  options.forEach(opt => {
+    const label = opt.dataset.label;
+    opt.textContent = label;
+    Object.assign(opt.style, {
+      padding:        '0.6rem 1rem',
+      fontSize:       '0.875rem',
+      fontFamily:     "'Lora', serif",
+      fontWeight:     '300',
+      color:          'var(--ink)',
+      cursor:         'pointer',
+      position:       'relative',
+      transition:     'color 0.2s',
+      borderBottom:   '1px solid rgba(13,13,10,0.06)',
+    });
+
+    // 毛笔下划线 — 用伪元素模拟不方便，改用box-shadow
+    opt.addEventListener('mouseenter', () => {
+      gsap.to(opt, { paddingLeft: '1.4rem', duration: 0.18, ease: 'power2.out' });
+      opt.style.color = 'var(--accent)';
+    });
+    opt.addEventListener('mouseleave', () => {
+      if (opt.dataset.value !== hidden.value) {
+        gsap.to(opt, { paddingLeft: '1rem', duration: 0.18, ease: 'power2.out' });
+        opt.style.color = 'var(--ink)';
+      }
+    });
+
+    opt.addEventListener('click', () => {
+      // 清空其他选中态
+      options.forEach(o => {
+        o.style.color = 'var(--ink)';
+        o.style.fontWeight = '300';
+        gsap.to(o, { paddingLeft: '1rem', duration: 0.15 });
+      });
+
+      // 标记选中
+      opt.style.color     = 'var(--accent)';
+      opt.style.fontWeight = '500';
+
+      // 更新值
+      hidden.value   = opt.dataset.value;
+      display.textContent = label;
+      display.style.color = 'var(--ink)';
+
+      // 关闭
+      closeDropdown();
+    });
+  });
+
+  function openDropdown() {
+    isOpen = true;
+    trigger.setAttribute('aria-expanded', 'true');
+    trigger.style.borderBottomColor = 'var(--accent)';
+
+    // 测量真实高度
+    panel.style.height = 'auto';
+    const h = panel.scrollHeight;
+    panel.style.height = '0';
+
+    gsap.to(panel, { height: h, duration: 0.32, ease: 'power2.out' });
+    gsap.to(chevron, { rotation: 180, duration: 0.28, ease: 'power2.out' });
+  }
+
+  function closeDropdown() {
+    isOpen = false;
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger.style.borderBottomColor = hidden.value
+      ? 'var(--accent)'
+      : 'rgba(13,13,10,0.16)';
+
+    gsap.to(panel, { height: 0, duration: 0.25, ease: 'power2.in' });
+    gsap.to(chevron, { rotation: 0, duration: 0.22, ease: 'power2.in' });
+  }
+
+  trigger.addEventListener('click', () => {
+    isOpen ? closeDropdown() : openDropdown();
+  });
+
+  // 点击外部关闭
+  document.addEventListener('click', (e) => {
+    if (!document.getElementById('section-field').contains(e.target)) {
+      if (isOpen) closeDropdown();
+    }
+  });
+})();
+  goTo(1);
+
+// ================================================
+    // FOOTER DRAWER
+    // ================================================
+    const footerDrawer = document.getElementById('footerDrawer');
+    const footerTab = document.getElementById('footerTab');
+    const footerArrow = document.getElementById('footerArrow');
+    let footerOpen = false;
+
+    footerTab.addEventListener('click', () => {
+        footerOpen = !footerOpen;
+        footerDrawer.classList.toggle('open', footerOpen);
+        footerArrow.style.transform = footerOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    });
+</script>
+<style>
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin 12s linear infinite;
+        }
+</style>
+</body>
+</html>

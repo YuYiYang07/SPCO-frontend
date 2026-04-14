@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SP Chinese Orchestra</title>
+    <!-- Dark favicon for light mode -->
+    <link rel="icon" href="./assets/images/spco_black.png" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="./assets/images/spco_white.png" media="(prefers-color-scheme: dark)">
+    <link rel="apple-touch-icon" href="/assets/images/spco_black.png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ink: '#1a1a1a',
+                        parchment: '#f5f0e8',
+                        rice: '#faf7f2',
+                        warmgray: '#e8e3da',
+                        accent: '#8b2500',
+                        gold: '#c4a35a',
+                    },
+                    fontFamily: {
+                        brush: ['"Zhi Mang Xing"', 'cursive'],
+                        body: ['"Noto Sans SC"', 'sans-serif'],
+                        english: ['"Inter"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Zhi+Mang+Xing&family=Noto+Sans+SC:wght@300;400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Meddon&display=swap" rel="stylesheet">
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <link rel="stylesheet" href="styles/index.css">
+
+</head>
+
+<body>
+    <div class="rice-paper-overlay"></div>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="flex flex-col items-center justify-center">
+            <div class="font-brush text-5xl md:text-7xl tracking-widest text-ink opacity-80 flex items-center gap-3">
+                <span>S</span>
+                <span>P</span>    
+                <span>C</span>   
+                
+                <svg class="w-[0.77em] h-[0.99em] mb-1 big-o-svg" viewBox="0 0 100 112" overflow="visible">
+                    <defs>
+                        <!-- 主笔：无噪点，干净墨线 -->
+                        <filter id="f-ink-edge" x="-40%" y="-40%" width="180%" height="180%">
+                            <feGaussianBlur stdDeviation="0.4"/>
+                        </filter>
+
+                        <!-- 毛丝：强湍流 -->
+                        <filter id="f-brush-wisp" x="-60%" y="-60%" width="220%" height="220%">
+                            <feTurbulence type="fractalNoise" baseFrequency="0.06 0.12"
+                                numOctaves="5" seed="3" result="noise"/>
+                            <feDisplacementMap in="SourceGraphic" in2="noise"
+                                scale="7" xChannelSelector="R" yChannelSelector="G"/>
+                        </filter>
+                        <filter id="f-brush-wisp2" x="-60%" y="-60%" width="220%" height="220%">
+                            <feTurbulence type="fractalNoise" baseFrequency="0.08 0.15"
+                                numOctaves="4" seed="17" result="noise"/>
+                            <feDisplacementMap in="SourceGraphic" in2="noise"
+                                scale="9" xChannelSelector="R" yChannelSelector="G"/>
+                        </filter>
+                    </defs>
+
+                    <path d="M 50,15 A 28,42 0 1 1 29,26"
+                        fill="none" stroke="currentColor"
+                        stroke-width="11" stroke-linecap="round"
+                        class="ink-o-main"/>
+
+                    <path d="M 50,15 A 28,42 0 1 1 29,26"
+                        fill="none" stroke="currentColor"
+                        stroke-width="13" stroke-linecap="round"
+                        filter="url(#f-ink-edge)"
+                        class="ink-o-start"/>
+
+                    <path d="M 50,15 A 28,42 0 1 1 29,26"
+                        fill="none" stroke="currentColor"
+                        stroke-width="11" stroke-linecap="round"
+                        filter="url(#f-ink-edge)"
+                        class="ink-o-end"/>
+
+                    <path d="M 50,15 A 28,42 0 1 1 29,26"
+                        fill="none" stroke="currentColor"
+                        stroke-width="2.5" stroke-linecap="round"
+                        opacity="0.40" filter="url(#f-brush-wisp)"
+                        style="transform: translate(2.5px, 0.8px)"
+                        class="ink-o-wisp-a"/>
+                    <path d="M 50,15 A 28,42 0 1 1 29,26"
+                        fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round"
+                        opacity="0.25" filter="url(#f-brush-wisp2)"
+                        style="transform: translate(-2px, 1.5px)"
+                        class="ink-o-wisp-b"/>
+                    <path d="M 50,15 A 28,42 0 1 1 29,26"
+                        fill="none" stroke="currentColor"
+                        stroke-width="1.5" stroke-linecap="round"
+                        opacity="0.15" filter="url(#f-brush-wisp2)"
+                        style="transform: translate(0px, -1.8px)"
+                        class="ink-o-wisp-c"/>
+
+                    <path d="M 50,15 A 28,42 0 1 1 29,26"
+                        fill="none" stroke="#faf7f2"
+                        stroke-width="16" stroke-linecap="round"
+                        class="ink-o-erase"/>
+                </svg>
+            </div>
+            
+            <div class="mt-6 w-16 h-px bg-ink/20"></div>
+        </div>
+    </div>
+<script src="./scripts/navbar.js"></script>
+
+<spco-navbar></spco-navbar>
+
+    <!-- =============================================
+             HERO SECTION
+             ============================================= -->
+    <section id="hero" class="relative bg-rice">
+        <!-- ── Silk cloth canvas (z-0, fills hero) ── -->
+        <canvas id="silkCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block;"></canvas>
+
+        <!-- ── Bottom fade: silk dissolves into #about bg ── -->
+        <div style="position:absolute;bottom:0;left:0;right:0;height:180px;background:linear-gradient(to bottom,transparent,#faf7f2);z-index:2;pointer-events:none;"></div>
+
+        <!-- Ink wash decorations (kept, sit above canvas) -->
+        <div class="ink-wash" style="width:600px;height:600px;background:#1a1a1a;top:-200px;right:-100px;z-index:1;"></div>
+        <div class="ink-wash" style="width:400px;height:400px;background:#8b2500;bottom:-100px;left:-50px;z-index:1;"></div>
+
+        <!-- Brush stroke SVG accents -->
+        <svg class="brush-stroke absolute top-20 right-10 w-64 h-64 md:w-96 md:h-96" style="z-index:3;" viewBox="0 0 200 200" fill="none">
+            <path d="M20,100 Q60,20 100,80 Q140,140 180,60" stroke="#1a1a1a" stroke-width="0.5" fill="none" opacity="0.6"/>
+            <circle cx="160" cy="40" r="30" fill="#8b2500" opacity="0.08"/>
+        </svg>
+
+        <svg class="brush-stroke absolute bottom-32 left-10 w-48 h-48" style="z-index:3;" viewBox="0 0 200 200" fill="none">
+            <path d="M10,150 Q50,50 100,120 Q150,190 190,90" stroke="#1a1a1a" stroke-width="0.4" fill="none" opacity="0.4"/>
+        </svg>
+
+        <div class="relative z-10 text-center px-6 max-w-4xl mx-auto" style="z-index:4;">
+            <!-- Chinese calligraphic title -->
+            <h1 id="heroTitle" class="hero-title text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-ink mb-4">
+                <img src="./assets/images/spco.png" alt="華樂"  class="mx-auto max-h-[50vh] max-w-[68vw] block">
+            </h1>
+
+            <!-- English subtitle -->
+            <p id="heroSubtitle" class="font-light tracking-[0.3em] text-ink/60 uppercase mt-4">
+                <span data-i18n="hero_subtitle">Singapore Polytechnic Chinese Orchestra</span>
+            </p>
+    </section>
+
+    <!-- =============================================
+             ABOUT SECTION
+             ============================================= -->
+    <section id="about" class="relative py-24 md:py-40 px-6">
+        <div class="ink-wash" style="width:500px;height:500px;background:#8b2500;top:50%;left:-200px;"></div>
+
+        <div class="max-w-5xl mx-auto">
+            <div class="grid md:grid-cols-12 gap-12 md:gap-16 items-start">
+                <!-- Left: Section title -->
+                <div class="md:col-span-4">
+                    <p class="section-chinese-title text-4xl md:text-5xl text-ink/80 mb-3" data-i18n="about_title_cn">关于华乐</p>
+                    <h2 class="text-xl md:text-2xl font-light text-ink tracking-wide about-reveal" data-i18n="about_title">About the Orchestra</h2>
+                    <div class="ink-divider w-16 mt-6 about-reveal"></div>
+                </div>
+
+                <!-- Right: Content -->
+                <div class="md:col-span-8 space-y-6">
+                    <p class="text-base md:text-lg font-light text-ink/70 leading-relaxed about-reveal" data-i18n="about_p1">
+                        The Singapore Polytechnic Chinese Orchestra (SPCO) is a vibrant student-led ensemble dedicated to the art of Chinese orchestral music. Founded with a passion for preserving and promoting Chinese musical heritage, the orchestra brings together students from diverse backgrounds united by their love for traditional and contemporary Chinese music.
+                    </p>
+                    <p class="text-base md:text-lg font-light text-ink/70 leading-relaxed about-reveal" data-i18n="about_p2">
+                        From the delicate plucking of the pipa to the soaring melodies of the erhu, our musicians breathe life into centuries-old compositions whilst embracing modern arrangements. We perform at national events, cultural celebrations, and community gatherings across Singapore.
+                    </p>
+                    <p class="text-base md:text-lg font-light text-ink/70 leading-relaxed about-reveal" data-i18n="about_p3">
+                        SPCO is more than an orchestra — it is a family, a classroom, and a stage where young musicians discover the beauty of Chinese orchestral traditions.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Torn paper divider -->
+    <div class="relative h-16 md:h-24">
+        <div class="absolute inset-0" style="background: linear-gradient(to bottom, #faf7f2, #f5f0e8);"></div>
+    </div>
+
+    <!-- =============================================
+             ACHIEVEMENTS SECTION
+             ============================================= -->
+    <section id="achievements" class="relative py-24 md:py-40 px-6 bg-parchment">
+        <div class="ink-wash" style="width:400px;height:700px;background:#1a1a1a;top:-200px;right:-0px;"></div>
+
+        <div class="max-w-5xl mx-auto">
+            <!-- Section header -->
+            <div class="text-center mb-16 md:mb-24">
+                <p class="section-chinese-title text-4xl md:text-5xl text-ink/80 mb-3 ach-reveal" data-i18n="ach_title_cn">荣誉成就</p>
+                <h2 class="text-xl md:text-2xl font-light text-ink tracking-wide ach-reveal" data-i18n="ach_title">Achievements & Recognition</h2>
+                <div class="ink-divider w-16 mt-6 mx-auto ach-reveal"></div>
+            </div>
+
+            <!-- Achievement cards -->
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                <!-- Card 1 -->
+                <div class="achievement-card ach-card">
+                    <div class="text-3xl font-brush text-accent/60 mb-3">壹</div>
+                    <h3 class="text-lg font-medium text-ink mb-2" data-i18n="ach_card1_title">Singapore Youth Festival</h3>
+                    <p class="text-sm font-light text-ink/50 leading-relaxed" data-i18n="ach_card1_desc">Consistently recognised with the Certificate of Distinction at the Singapore Youth Festival Arts Presentation, a testament to our musical excellence.</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="achievement-card ach-card">
+                    <div class="text-3xl font-brush text-accent/60 mb-3">贰</div>
+                    <h3 class="text-lg font-medium text-ink mb-2" data-i18n="ach_card2_title">Cultural Performances</h3>
+                    <p class="text-sm font-light text-ink/50 leading-relaxed" data-i18n="ach_card2_desc">Invited performers at prestigious events including National Day celebrations, Esplanade showcases, and inter-polytechnic cultural festivals.</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="achievement-card ach-card">
+                    <div class="text-3xl font-brush text-accent/60 mb-3">叁</div>
+                    <h3 class="text-lg font-medium text-ink mb-2" data-i18n="ach_card3_title">Community Outreach</h3>
+                    <p class="text-sm font-light text-ink/50 leading-relaxed" data-i18n="ach_card3_desc">Actively bringing Chinese orchestral music to the wider community through charity concerts, school visits, and public engagement programmes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="exco" class="relative py-24 md:py-40 px-6 bg-parchment torn-edge-top">
+ 
+  <!-- SVG filter for ink bleed effect -->
+  <svg class="exco-svg-filters" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="ink-bleed" x="-40%" y="-40%" width="180%" height="180%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.035 0.07"
+          numOctaves="4" seed="8" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise"
+          scale="18" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+        <feGaussianBlur in="displaced" stdDeviation="1.2"/>
+      </filter>
+    </defs>
+  </svg>
+ 
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-16 md:mb-24">
+      <p class="section-chinese-title text-4xl md:text-5xl text-ink/80 mb-3 ach-reveal" data-i18n="group_title_cn">行政团队</p>
+      <h2 class="text-xl md:text-2xl font-light text-ink tracking-wide ach-reveal" data-i18n="group_title">Our Exco</h2>
+      <div class="ink-divider w-16 mt-6 mx-auto ach-reveal"></div>
+    </div>
+ 
+    <!-- Exco list -->
+    <div class="border-t border-dotted border-ink/15" id="excoList">
+ 
+      <!-- Each row: data-member links to excoData key -->
+      <div class="exco-row" data-member="president">
+        <div class="exco-ink"><div class="exco-ink-shape"></div></div>
+        <div class="exco-left">
+          <span class="exco-role" data-i18n="exco_role_president">President</span>
+          <span class="exco-name">Isaac Chang</span>
+        </div>
+        <div class="exco-btns">
+          <button class="exco-btn btn-about" data-type="about" data-i18n="about_him">About him</button>
+          <button class="exco-btn btn-history" data-type="history" data-i18n="exco_history">History</button>
+        </div>
+      </div>
+ 
+      <div class="exco-row" data-member="vp">
+        <div class="exco-ink"><div class="exco-ink-shape"></div></div>
+        <div class="exco-left">
+          <span class="exco-role" data-i18n="exco_role_vp">Vice President</span>
+          <span class="exco-name">Aloysius Teo</span>
+        </div>
+        <div class="exco-btns">
+          <button class="exco-btn btn-about" data-type="about" data-i18n="about_him">About him</button>
+          <button class="exco-btn btn-history" data-type="history" data-i18n="exco_history">History</button>
+        </div>
+      </div>
+ 
+      <div class="exco-row" data-member="secretary">
+        <div class="exco-ink"><div class="exco-ink-shape"></div></div>
+        <div class="exco-left">
+          <span class="exco-role" data-i18n="exco_role_secretary">Secretary Head</span>
+          <span class="exco-name">Shirlyn Goh</span>
+        </div>
+        <div class="exco-btns">
+          <button class="exco-btn btn-about" data-type="about" data-i18n="about_her">About her</button>
+          <button class="exco-btn btn-history" data-type="history" data-i18n="exco_history">History</button>
+        </div>
+      </div>
+ 
+      <div class="exco-row" data-member="conductor">
+        <div class="exco-ink"><div class="exco-ink-shape"></div></div>
+        <div class="exco-left">
+          <span class="exco-role" data-i18n="exco_role_conductor">Student Conductor</span>
+          <span class="exco-name">Beh Pei Zhen</span>
+        </div>
+        <div class="exco-btns">
+          <button class="exco-btn btn-about" data-type="about" data-i18n="about_her">About her</button>
+          <button class="exco-btn btn-history" data-type="history" data-i18n="exco_history">History</button>
+        </div>
+      </div>
+ 
+      <div class="exco-row" data-member="concertmaster">
+        <div class="exco-ink"><div class="exco-ink-shape"></div></div>
+        <div class="exco-left">
+          <span class="exco-role" data-i18n="exco_role_concertmaster">Concert Master</span>
+          <span class="exco-name">Cheong Wei Chuan</span>
+        </div>
+        <div class="exco-btns">
+          <button class="exco-btn btn-about" data-type="about" data-i18n="about_him">About him</button>
+          <button class="exco-btn btn-history" data-type="history" data-i18n="exco_history">History</button>
+        </div>
+      </div>
+ 
+      <div class="exco-row" data-member="publicity">
+        <div class="exco-ink"><div class="exco-ink-shape"></div></div>
+        <div class="exco-left">
+          <span class="exco-role" data-i18n="exco_role_publicity">Publicity Head</span>
+          <span class="exco-name">Loo Siong Leng</span>
+        </div>
+        <div class="exco-btns">
+          <button class="exco-btn btn-about" data-type="about" data-i18n="about_him">About him</button>
+          <button class="exco-btn btn-history" data-type="history" data-i18n="exco_history">History</button>
+        </div>
+      </div>
+ 
+      <div class="exco-row" data-member="qm">
+        <div class="exco-ink"><div class="exco-ink-shape"></div></div>
+        <div class="exco-left">
+          <span class="exco-role" data-i18n="exco_role_qm">Quarter Master</span>
+          <span class="exco-name">Yu Yi Yang</span>
+        </div>
+        <div class="exco-btns">
+          <button class="exco-btn btn-about" data-type="about" data-i18n="about_him">About him</button>
+          <button class="exco-btn btn-history" data-type="history" data-i18n="exco_history">History</button>
+        </div>
+      </div>
+ 
+      <div class="exco-row" data-member="treasurer">
+        <div class="exco-ink"><div class="exco-ink-shape"></div></div>
+        <div class="exco-left">
+          <span class="exco-role" data-i18n="exco_role_treasurer">Treasurer</span>
+          <span class="exco-name">Koh Jia Xin</span>
+        </div>
+        <div class="exco-btns">
+          <button class="exco-btn btn-about" data-type="about" data-i18n="about_her">About her</button>
+          <button class="exco-btn btn-history" data-type="history" data-i18n="exco_history">History</button>
+        </div>
+      </div>
+ 
+      <div class="exco-row" data-member="logistics">
+        <div class="exco-ink"><div class="exco-ink-shape"></div></div>
+        <div class="exco-left">
+          <span class="exco-role" data-i18n="exco_role_logistics">Logistics Head</span>
+          <span class="exco-name">Edmund Cheong</span>
+        </div>
+        <div class="exco-btns">
+          <button class="exco-btn btn-about" data-type="about" data-i18n="about_him">About him</button>
+          <button class="exco-btn btn-history" data-type="history" data-i18n="exco_history">History</button>
+        </div>
+      </div>
+ 
+      <div class="exco-row" data-member="librarian">
+        <div class="exco-ink"><div class="exco-ink-shape"></div></div>
+        <div class="exco-left">
+          <span class="exco-role" data-i18n="exco_role_librarian">Librarian</span>
+          <span class="exco-name">Li Xuan</span>
+        </div>
+        <div class="exco-btns">
+          <button class="exco-btn btn-about" data-type="about" data-i18n="about_her">About her</button>
+          <button class="exco-btn btn-history" data-type="history" data-i18n="exco_history">History</button>
+        </div>
+      </div>
+ 
+      <div class="exco-row" data-member="events">
+        <div class="exco-ink"><div class="exco-ink-shape"></div></div>
+        <div class="exco-left">
+          <span class="exco-role" data-i18n="exco_role_events">Event Manager</span>
+          <span class="exco-name">Charlotte Ang</span>
+        </div>
+        <div class="exco-btns">
+          <button class="exco-btn btn-about" data-type="about" data-i18n="about_her">About her</button>
+          <button class="exco-btn btn-history" data-type="history" data-i18n="exco_history">History</button>
+        </div>
+      </div>
+ 
+      <div class="exco-row" data-member="welfare">
+        <div class="exco-ink"><div class="exco-ink-shape"></div></div>
+        <div class="exco-left">
+          <span class="exco-role" data-i18n="exco_role_welfare">Welfare Head</span>
+          <span class="exco-name">Christine Yong</span>
+        </div>
+        <div class="exco-btns">
+          <button class="exco-btn btn-about" data-type="about" data-i18n="about_her">About her</button>
+          <button class="exco-btn btn-history" data-type="history" data-i18n="exco_history">History</button>
+        </div>
+      </div>
+ 
+    </div><!-- /excoList -->
+  </div>
+ 
+  <!-- About card overlay -->
+  <div class="exco-overlay" id="excoAboutOverlay">
+    <div class="exco-card" id="excoAboutCard">
+      <button class="exco-card-close" id="closeAbout" aria-label="Close">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <p class="exco-card-eyebrow" id="aboutEyebrow">About</p>
+      <h3 class="exco-card-name" id="aboutName"></h3>
+      <p class="exco-card-role" id="aboutRole"></p>
+      <div class="exco-card-body" id="aboutBody"></div>
+    </div>
+  </div>
+ 
+  <!-- History card overlay -->
+  <div class="exco-overlay" id="excoHistoryOverlay">
+    <div class="exco-card" id="excoHistoryCard">
+      <button class="exco-card-close" id="closeHistory" aria-label="Close">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <p class="exco-card-eyebrow">Position History</p>
+      <h3 class="exco-card-name" id="historyRole"></h3>
+      <p class="exco-card-role" id="historySubtitle">Previous holders of this role</p>
+      <div id="historyBody"></div>
+    </div>
+  </div>
+ 
+</section>
+
+    <!-- =============================================
+             VISION SECTION
+             ============================================= -->
+    <section id="vision" class="relative py-24 md:py-40 px-6 bg-rice">
+        <div class="ink-wash" style="width:500px;height:500px;background:#c4a35a;top:100px;left:-200px;opacity:0.03;"></div>
+
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-16 md:mb-20">
+                <p class="section-chinese-title text-4xl md:text-5xl text-ink/80 mb-3 vis-reveal" data-i18n="vis_title_cn">愿景展望</p>
+                <h2 class="text-xl md:text-2xl font-light text-ink tracking-wide vis-reveal" data-i18n="vis_title">Our Vision</h2>
+                <div class="ink-divider w-16 mt-6 mx-auto vis-reveal"></div>
+            </div>
+
+            <div class="space-y-12 md:space-y-16">
+                <!-- Vision statement 1 -->
+                <div class="flex gap-6 md:gap-10 items-start vis-reveal">
+                    <div class="flex-shrink-0 w-px h-16 bg-accent/20 mt-1"></div>
+                    <div>
+                        <h3 class="text-lg md:text-xl font-medium text-ink mb-3" data-i18n="vis_item1_title">Bridging Generations</h3>
+                        <p class="text-sm md:text-base font-light text-ink/60 leading-relaxed" data-i18n="vis_item1_desc">We envision SPCO as a bridge between the rich traditions of Chinese music and the vibrant energy of Singapore's youth. By nurturing young musicians, we ensure that this cultural heritage thrives for generations to come.</p>
+                    </div>
+                </div>
+
+                <!-- Vision statement 2 -->
+                <div class="flex gap-6 md:gap-10 items-start vis-reveal">
+                    <div class="flex-shrink-0 w-px h-16 bg-accent/20 mt-1"></div>
+                    <div>
+                        <h3 class="text-lg md:text-xl font-medium text-ink mb-3" data-i18n="vis_item2_title">Innovation in Tradition</h3>
+                        <p class="text-sm md:text-base font-light text-ink/60 leading-relaxed" data-i18n="vis_item2_desc">Whilst honouring classical compositions, we embrace contemporary arrangements and cross-genre collaborations. Our repertoire evolves with the times, making Chinese orchestral music accessible and exciting for modern audiences.</p>
+                    </div>
+                </div>
+
+                <!-- Vision statement 3 -->
+                <div class="flex gap-6 md:gap-10 items-start vis-reveal">
+                    <div class="flex-shrink-0 w-px h-16 bg-accent/20 mt-1"></div>
+                    <div>
+                        <h3 class="text-lg md:text-xl font-medium text-ink mb-3" data-i18n="vis_item3_title">Excellence & Community</h3>
+                        <p class="text-sm md:text-base font-light text-ink/60 leading-relaxed" data-i18n="vis_item3_desc">We strive for artistic excellence not as an end in itself, but as a means to inspire. Every rehearsal, every performance, and every shared moment strengthens the bonds within our orchestra family.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================
+             JOIN US SECTION
+             ============================================= -->
+    <section id="join" class="relative py-24 md:py-40 px-6 bg-parchment torn-edge-top" style="margin-bottom: 48px;">
+        <div class="ink-wash" style="width:400px;height:400px;background:#8b2500;bottom:-0px;right:-0px;"></div>
+
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-16 md:mb-20">
+                <p class="section-chinese-title text-4xl md:text-5xl text-ink/80 mb-3 join-reveal" data-i18n="join_title_cn">加入我们</p>
+                <h2 class="text-xl md:text-2xl font-light text-ink tracking-wide join-reveal" data-i18n="join_title">Join the Orchestra</h2>
+                <div class="ink-divider w-16 mt-6 mx-auto join-reveal"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12 md:gap-16">
+                <!-- Requirements -->
+                <div class="join-reveal">
+                    <h3 class="text-lg font-medium text-ink mb-6" data-i18n="join_req_title">What We Look For</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent/40 mt-2 flex-shrink-0"></span>
+                            <span class="text-sm font-light text-ink/60 leading-relaxed" data-i18n="join_req1">Current students of Singapore Polytechnic with a genuine passion for Chinese music and culture.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent/40 mt-2 flex-shrink-0"></span>
+                            <span class="text-sm font-light text-ink/60 leading-relaxed" data-i18n="join_req2">Prior experience with a Chinese instrument is preferred but not strictly required — we welcome beginners with dedication.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent/40 mt-2 flex-shrink-0"></span>
+                            <span class="text-sm font-light text-ink/60 leading-relaxed" data-i18n="join_req3">Commitment to attend weekly rehearsals and perform at scheduled events throughout the academic year.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent/40 mt-2 flex-shrink-0"></span>
+                            <span class="text-sm font-light text-ink/60 leading-relaxed" data-i18n="join_req4">A collaborative spirit and willingness to learn, grow, and contribute to the orchestra community.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- CTA -->
+                <div class="join-reveal flex flex-col justify-center items-center md:items-start">
+                    <p class="text-base font-light text-ink/60 leading-relaxed mb-8 text-center md:text-left" data-i18n="join_cta_text">
+                        Ready to embark on a musical journey? Whether you are a seasoned player or just beginning, there is a place for you in SPCO. Auditions are held at the start of each semester.
+                    </p>
+                    <a href="./signup.html" class="cta-btn inline-block bg-ink text-rice px-8 py-3.5 rounded-full text-sm tracking-widest uppercase hover:bg-accent transition-colors">
+                        <span data-i18n="join_cta_btn">Sign up</span>
+                    </a>
+                    <p class="mt-4 text-xs text-ink/30" data-i18n="join_cta_email">sas2 system in sp.edu.sg</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================
+             FOOTER DRAWER
+             ============================================= -->
+   <div class="footer-drawer footer-torn" id="footerDrawer">
+        <!-- Tab to reveal -->
+        <div class="footer-drawer-tab bg-ink" id="footerTab">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#faf7f2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-500" id="footerArrow">
+                <polyline points="18 15 12 9 6 15"/>
+            </svg>
+        </div>
+
+        <!-- Footer content -->
+        <div class="bg-ink text-rice/70 px-6 py-10 md:py-14">
+            <div class="max-w-5xl mx-auto">
+                <div class="grid sm:grid-cols-2 md:grid-cols-5 gap-8">
+                    
+                    <div class="md:col-span-2">
+                        <p class="font-brush text-2xl text-rice/90 mb-4">新加坡理工华乐团</p>
+                        <p class="text-xs text-rice/30 leading-relaxed whitespace-pre-line" data-i18n="footer_brand_desc">© Singapore Poly Chinese Orchestra</p>
+                    </div>
+
+                    <!-- Social -->
+                    <div>
+                        <p class="text-xs uppercase tracking-widest text-rice/30 mb-4" data-i18n="footer_social">Follow Us</p>
+                        <div class="space-y-3">
+                            <a href="https://instagram.com/spcotv" target="_blank" rel="noopener" class="flex items-center gap-3 text-sm text-rice/50 hover:text-rice transition-colors group">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                                Instagram
+                            </a>
+                            <a href="https://www.youtube.com/@SingaporePolyChineseOrchestra" target="_blank" rel="noopener" class="flex items-center gap-3 text-sm text-rice/50 hover:text-rice transition-colors group">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7.1c.3-1.3 1.4-2.4 2.7-2.7C8.1 4 12 4 12 4s3.9 0 6.8.4c1.3.3 2.4 1.4 2.7 2.7.4 1.5.4 4.8.4 4.8s0 3.3-.4 4.8c-.3 1.3-1.4 2.4-2.7 2.7-2.9.4-6.8.4-6.8.4s-3.9 0-6.8-.4c-1.3-.3-2.4-1.4-2.7-2.7-.4-1.5-.4-4.8-.4-4.8s0-3.3.4-4.8Z"/><path d="m10 15 5-3-5-3v6Z"/></svg>
+                                YouTube
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Contact -->
+                    <div>
+                        <p class="text-xs uppercase tracking-widest text-rice/30 mb-4" data-i18n="footer_contact">Contact</p>
+                        <div class="space-y-3 flex flex-col">
+                            <a href="/cdn-cgi/l/email-protection#b0c3c0efd3dff0d9d3d8d1c49ec3c09ed5d4c59ec3d7" class="text-sm text-rice/50 hover:text-rice transition-colors">Email Us</a>
+                            <a href="https://www.sp.edu.sg/student-life/ccas/our-clubs/arts-culture/sp-chinese-orchestra" class="text-sm text-rice/50 hover:text-rice transition-colors">SP website</a>
+                        </div>
+                    </div>
+
+                    <!-- Credits -->
+                    <div>
+                        <p class="text-xs uppercase tracking-widest text-rice/30 mb-4" data-i18n="footer_credits">Information</p>
+                        <div class="space-y-3 flex flex-col">
+                            <a href="https://yuyiyang.me" class="text-sm text-rice/50 hover:text-rice transition-colors" data-i18n="footer_author">About the Author</a>
+                            <a href="./privacy.html" class="text-sm text-rice/50 hover:text-rice transition-colors" data-i18n="footer_privacy">Privacy Statement</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three.js for silk hero -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- =============================================
+             JAVASCRIPT
+             ============================================= -->
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // ================================================
+        // LANGUAGE SYSTEM
+        // ================================================
+        const translations = {
+            en: {
+                nav_title: '新加坡理工学院 · 华乐团',
+                nav_about: 'About',
+                nav_achievements: 'Achievements',
+                nav_vision: 'Vision',
+                nav_join: 'Join Us',
+                hero_title_cn: '华乐',
+                hero_subtitle: 'Singapore Polytechnic Chinese Orchestra',
+                hero_scroll: 'Scroll',
+                about_title_cn: '关于华乐',
+                about_title: 'About the Orchestra',
+                about_p1: 'The Singapore Polytechnic Chinese Orchestra (SPCO) is a vibrant student-led ensemble dedicated to the art of Chinese orchestral music. Founded with a passion for preserving and promoting Chinese musical heritage, the orchestra brings together students from diverse backgrounds united by their love for traditional and contemporary Chinese music.',
+                about_p2: 'From the delicate plucking of the pipa to the soaring melodies of the erhu, our musicians breathe life into centuries-old compositions whilst embracing modern arrangements. We perform at national events, cultural celebrations, and community gatherings across Singapore.',
+                about_p3: 'SPCO is more than an orchestra — it is a family, a classroom, and a stage where young musicians discover the beauty of Chinese orchestral traditions.',
+                ach_title_cn: '荣誉成就',
+                ach_title: 'Achievements & Recognition',
+                ach_card1_title: 'Singapore Youth Festival',
+                ach_card1_desc: 'Consistently recognised with the Certificate of Distinction at the Singapore Youth Festival Arts Presentation, a testament to our musical excellence.',
+                ach_card2_title: 'Cultural Performances',
+                ach_card2_desc: 'Invited performers at prestigious events including National Day celebrations, Esplanade showcases, and inter-polytechnic cultural festivals.',
+                ach_card3_title: 'Community Outreach',
+                ach_card3_desc: 'Actively bringing Chinese orchestral music to the wider community through charity concerts, school visits, and public engagement programmes.',
+                group_title_cn: "行政团队",
+                group_title: "Our Exco Members",
+                vis_title_cn: '愿景展望',
+                vis_title: 'Our Vision',
+                vis_item1_title: 'Bridging Generations',
+                vis_item1_desc: 'We envision SPCO as a bridge between the rich traditions of Chinese music and the vibrant energy of Singapore\'s youth. By nurturing young musicians, we ensure that this cultural heritage thrives for generations to come.',
+                vis_item2_title: 'Innovation in Tradition',
+                vis_item2_desc: 'Whilst honouring classical compositions, we embrace contemporary arrangements and cross-genre collaborations. Our repertoire evolves with the times, making Chinese orchestral music accessible and exciting for modern audiences.',
+                vis_item3_title: 'Excellence & Community',
+                vis_item3_desc: 'We strive for artistic excellence not as an end in itself, but as a means to inspire. Every rehearsal, every performance, and every shared moment strengthens the bonds within our orchestra family.',
+                join_title_cn: '加入我们',
+                join_title: 'Join the Orchestra',
+                join_req_title: 'What We Look For',
+                join_req1: 'Current students of Singapore Polytechnic with a genuine passion for Chinese music and culture.',
+                join_req2: 'Prior experience with a Chinese instrument is preferred but not strictly required — we welcome beginners with dedication.',
+                join_req3: 'Commitment to attend weekly rehearsals and perform at scheduled events throughout the academic year.',
+                join_req4: 'A collaborative spirit and willingness to learn, grow, and contribute to the orchestra community.',
+                join_cta_text: 'Ready to embark on a musical journey? Whether you are a seasoned player or just beginning, there is a place for you in SPCO. Auditions are held at the start of each semester.',
+                join_cta_btn: 'Sign Up',
+                join_cta_email: 'sas2 platform in sp.edu.sg',
+                footer_brand_desc: '© 2026\n SP Chinese Orchestra',
+                footer_social: 'Follow Us',
+                footer_contact: 'Contact',
+                footer_credits: 'Informations',
+                footer_author: 'About the Author',
+                footer_report: 'Report Vulnerables',
+                footer_privacy: 'Privacy Statement',
+                about_her: "About Her",
+                about_him: "About Him",
+                exco_history: "History",
+                exco_role_president: "President",
+                exco_role_vp: "Vice President",
+                exco_role_secretary: "Secretary Head",
+                exco_role_conductor: "Student Conductor",
+                exco_role_concertmaster: "Concert Master",
+                exco_role_publicity: "Publicity Head",
+                exco_role_qm: "Quarter Master",
+                exco_role_treasurer: "Treasurer",
+                exco_role_logistics: "Logistics Head",
+                exco_role_librarian: "Librarian",
+                exco_role_events: "Event Manager",
+                exco_role_welfare: "Welfare Head",
+                exco_card_prev: "Previous Holders",
+            },
+            zh: {
+                nav_title: '新加坡理工学院 · 华乐团',
+                nav_about: '关于我们',
+                nav_achievements: '荣誉成就',
+                nav_vision: '愿景展望',
+                nav_join: '加入我们',
+                hero_title_cn: '华乐',
+                hero_subtitle: '新加坡理工学院 · 华乐团',
+                hero_scroll: '向下滚动',
+                about_title_cn: '关于华乐',
+                about_title: '',
+                about_p1: '新加坡理工学院华乐团（SPCO）是一个充满活力的学生主导合奏团，致力于中国管弦乐艺术。华乐团以保护和推广中华音乐遗产的热情而成立，汇聚了来自不同背景的学生，他们因对传统与当代中国音乐的热爱而走在一起。',
+                about_p2: '从琵琶的轻拨到二胡的悠扬旋律，我们的乐手为百年古曲注入生命，同时拥抱现代编曲。我们在国家活动、文化庆典和新加坡各地的社区聚会中演出。',
+                about_p3: 'SPCO不仅是一个乐团——它是一个家庭、一间教室、一个年轻乐手发现中国管弦乐传统之美的舞台',
+                ach_title_cn: '荣誉成就',
+                ach_title: '',
+                ach_card1_title: '新加坡青年节',
+                ach_card1_desc: '在新加坡青年节艺术展演中持续获得杰出证书，证明了我们的音乐卓越水平',
+                ach_card2_title: '文化演出',
+                ach_card2_desc: '受邀在国庆庆典、滨海艺术中心演出及各理工学院文化节等重要活动中表演',
+                ach_card3_title: '社区推广',
+                ach_card3_desc: '通过慈善音乐会、学校访问和公众参与活动，积极将华乐带入更广泛的社区',
+                vis_title_cn: '愿景展望',
+                vis_title: '',
+                vis_item1_title: '跨越代际的桥梁',
+                vis_item1_desc: '我们期望SPCO成为中华音乐丰富传统与新加坡青年活力之间的桥梁。通过培育年轻乐手，我们确保这一文化遗产代代传承。',
+                vis_item2_title: '传统中的创新',
+                vis_item2_desc: '在尊重古典作品的同时，我们拥抱当代编曲和跨流派合作。我们的曲目与时俱进，使华乐对现代观众更加亲近和精彩。',
+                vis_item3_title: '卓越与社群',
+                vis_item3_desc: '我们追求艺术卓越，不是为了卓越本身，而是为了激励他人。每一次排练、每一场演出、每一个分享的时刻都加强了我们乐团大家庭的纽带。',
+                join_title_cn: '加入我们',
+                join_title: '',
+                join_req_title: '我们期望你：',
+                join_req1: '是新加坡理工学院在读学生/新生，对华乐和中华文化有热情。',
+                join_req2: '有经验者优先，但不严格要求：我们欢迎有毅力的初学者。',
+                join_req3: '承诺参加每周排练，并在整个学年中参加既定活动的演出。',
+                join_req4: '具有协作精神，愿意学习、成长，并为乐团社区做出贡献。',
+                join_cta_text: '准备好踏上音乐之旅了吗？无论您是经验丰富的乐团大师, 还是，SPCO都有您的位置。甄选在每学期初举行。',
+                join_cta_btn: '踏上征途',
+                join_cta_email: '新加坡理工学院学生管理平台',
+                footer_brand_desc: '© 2026\n 新加坡理工学院华乐团',
+                footer_social: '关注我们',
+                footer_contact: '联系方式',
+                footer_credits: '更多信息',
+                footer_author: '关于作者',
+                footer_report: '报告漏洞',
+                footer_privacy: '隐私政策',
+                about_her: "关于她",
+                about_him: "关于他",
+                exco_history: "历届回顾",
+                exco_role_president: "会长",
+                exco_role_vp: "副会长",
+                exco_role_secretary: "秘书长",
+                exco_role_conductor: "学生指挥",
+                exco_role_concertmaster: "乐团首席 | 第一高胡乐手",
+                exco_role_publicity: "宣传部长",
+                exco_role_qm: "后勤部长",
+                exco_role_treasurer: "财务部长",
+                exco_role_logistics: "物流办主任",
+                exco_role_librarian: "乐务办主任",
+                exco_role_events: "活动策划",
+                exco_role_welfare: "福利办主任",
+                exco_card_prev: "历届担任者",
+
+            }
+        };
+
+        let currentLang = 'en';
+
+        function switchLang(lang) {
+            currentLang = lang;
+            document.documentElement.setAttribute('data-lang', lang);
+            const t = translations[lang];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key]) el.textContent = t[key];
+            });
+            // Update active lang button
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('bg-ink', btn.dataset.langValue === lang);
+                btn.classList.toggle('text-rice', btn.dataset.langValue === lang);
+                btn.classList.toggle('border-ink', btn.dataset.langValue === lang);
+            });
+        }
+        window.switchLang = switchLang;
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const main = document.querySelector('.ink-o-main');
+            if (!main) return;
+
+            const len = Math.ceil(main.getTotalLength());
+            const startLen = 18;
+            const endLen = 20;
+
+            document.documentElement.style.setProperty('--o-len', len);
+            // 收笔段 offset 动画起止值
+            // 初态：整条路径都隐藏，末尾段也在隐藏区域内
+            //   dashoffset = endLen（相当于从头跳过整条，末尾段不可见）
+            // 终态：显示末尾 endLen 的部分
+            //   dashoffset = -(len - endLen)
+            document.documentElement.style.setProperty('--o-end-from', endLen);
+            document.documentElement.style.setProperty('--o-end-to', -(len - endLen));
+        });
+
+
+        // ================================================
+        // FOOTER DRAWER
+        // ================================================
+        const footerDrawer = document.getElementById('footerDrawer');
+        const footerTab = document.getElementById('footerTab');
+        const footerArrow = document.getElementById('footerArrow');
+        let footerOpen = false;
+
+        footerTab.addEventListener('click', () => {
+            footerOpen = !footerOpen;
+            footerDrawer.classList.toggle('open', footerOpen);
+            footerArrow.style.transform = footerOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+        });
+
+        // ================================================
+        // GSAP ANIMATIONS
+        // ================================================
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- Loading Screen ---
+        window.addEventListener('load', () => {
+            const tl = gsap.timeline();
+            tl.to('#loadingScreen', {
+                opacity: 0,
+                duration: 0.8,
+                delay: 1.2,
+                ease: 'power2.inOut',
+                onComplete: () => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                }
+            });
+
+            // --- Hero entrance animations ---
+            tl.from('#heroTitle', {
+                y: 60,
+                opacity: 0,
+                duration: 1.2,
+                ease: 'power3.out'
+            }, '-=0.3')
+            .from('#heroSubtitle', {
+                y: 30,
+                opacity: 0,
+                duration: 0.8,
+                ease: 'power3.out'
+            }, '-=0.7')
+            .to('#heroLine', {
+                width: '80px',
+                duration: 1,
+                ease: 'power2.inOut'
+            }, '-=0.5')
+            .from('#heroTagline', {
+                y: 20,
+                opacity: 0,
+                duration: 0.8,
+                ease: 'power3.out'
+            }, '-=0.6')
+            .from('#scrollIndicator', {
+                opacity: 0,
+                y: 10,
+                duration: 0.6,
+                ease: 'power2.out'
+            }, '-=0.3');
+        });
+
+        // --- HERO → NAVBAR MORPH TRANSITION ---
+        // The hero title scales down and morphs into the navbar brand
+        // This uses a visual anchor: the Chinese title text serves as the anchor
+        // that transitions from hero prominence to navbar identity
+        ScrollTrigger.create({
+            trigger: '#hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+            onUpdate: (self) => {
+                const progress = self.progress;
+                const heroTitle = document.getElementById('heroTitle');                
+
+                // Hero title fades and scales down (occlusion transition)
+                gsap.set(heroTitle, {
+                    opacity: 1 - progress * 1.5,
+                    scale: 1 - progress * 0.3,
+                    y: progress * -40
+                });
+
+                // Navbar title fades in (visual anchor emerges in new context)
+                const navOpacity = Math.max(0, (progress - 0.4) / 0.3);
+
+                // Scroll indicator fades
+                gsap.set('#scrollIndicator', {
+                    opacity: 1 - progress * 3
+                });
+            }
+        });
+
+        // --- ABOUT SECTION: Staggered reveal ---
+        // Elements slide up with slight stagger (morphing layout transition)
+        gsap.utils.toArray('.about-reveal').forEach((el, i) => {
+            gsap.from(el, {
+                scrollTrigger: {
+                    trigger: el,
+                    start: 'top 85%',
+                    toggleActions: 'play none none none'
+                },
+                y: 40,
+                opacity: 0,
+                duration: 0.9,
+                delay: i * 0.1,
+                ease: 'power3.out'
+            });
+        });
+
+        // --- ACHIEVEMENTS: Section title and cards reveal ---
+        gsap.utils.toArray('.ach-reveal').forEach((el, i) => {
+            gsap.from(el, {
+                scrollTrigger: {
+                    trigger: el,
+                    start: 'top 85%',
+                    toggleActions: 'play none none none'
+                },
+                y: 30,
+                opacity: 0,
+                duration: 0.8,
+                delay: i * 0.08,
+                ease: 'power3.out'
+            });
+        });
+
+        // Achievement cards: Scale-up morph with stagger
+        gsap.utils.toArray('.ach-card').forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 88%',
+                    toggleActions: 'play none none none'
+                },
+                scale: 0.92,
+                opacity: 0,
+                y: 30,
+                duration: 0.7,
+                delay: i * 0.12,
+                ease: 'power3.out'
+            });
+        });
+
+        // --- VISION: Left-border + text reveal (match transition with accent bar) ---
+        gsap.utils.toArray('.vis-reveal').forEach((el, i) => {
+            gsap.from(el, {
+                scrollTrigger: {
+                    trigger: el,
+                    start: 'top 85%',
+                    toggleActions: 'play none none none'
+                },
+                x: -20,
+                opacity: 0,
+                duration: 0.8,
+                delay: i * 0.1,
+                ease: 'power3.out'
+            });
+        });
+
+        // --- JOIN: Reveal with upward morph ---
+        gsap.utils.toArray('.join-reveal').forEach((el, i) => {
+            gsap.from(el, {
+                scrollTrigger: {
+                    trigger: el,
+                    start: 'top 85%',
+                    toggleActions: 'play none none none'
+                },
+                y: 40,
+                opacity: 0,
+                duration: 0.9,
+                delay: i * 0.1,
+                ease: 'power3.out'
+            });
+        });
+
+        // --- INK WASH BLEED ANIMATION ---
+        // Ink washes slowly animate in as you scroll near them
+        gsap.utils.toArray('.ink-wash').forEach(wash => {
+            gsap.from(wash, {
+                scrollTrigger: {
+                    trigger: wash.parentElement,
+                    start: 'top 90%',
+                    toggleActions: 'play none none none'
+                },
+                scale: 0.5,
+                opacity: 0,
+                duration: 2,
+                ease: 'power1.out'
+            });
+        });
+
+        // --- SMOOTH PARALLAX on brush strokes ---
+        gsap.utils.toArray('.brush-stroke').forEach(stroke => {
+            gsap.to(stroke, {
+                scrollTrigger: {
+                    trigger: stroke.parentElement,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1
+                },
+                y: -60,
+                ease: 'none'
+            });
+        });
+
+        // --- Section Chinese titles: gentle float ---
+        gsap.utils.toArray('.section-chinese-title').forEach(title => {
+            gsap.to(title, {
+                scrollTrigger: {
+                    trigger: title,
+                    start: 'top 80%',
+                    end: 'bottom 20%',
+                    scrub: 1
+                },
+                y: -10,
+                none
+            });
+        });
+
+    </script>
+
+    <!-- SILK CLOTH v5 -->
+    <script>
+    (function(){
+        const canvas = document.getElementById('silkCanvas');
+        if(!canvas || typeof THREE === 'undefined') return;
+        const hero = document.getElementById('hero');
+
+        // 1. 基础渲染器设置
+        const renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true, alpha: true});
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // 限制最高像素比以保证性能
+        
+        const scene = new THREE.Scene();
+        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1); // 使用正交相机完美覆盖全屏
+
+        function resize(){
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        // 2. FBO (帧缓冲对象) 设置：用于流体/波纹模拟
+        // 分辨率不需要太高，256或512足够了，太高反而波纹扩散太慢
+        const SIM_RES = 512; 
+        const rtOpts = {
+            minFilter: THREE.LinearFilter,
+            magFilter: THREE.LinearFilter,
+            format: THREE.RGBAFormat,
+            type: THREE.FloatType, // 使用浮点纹理记录波浪高度，防止数据被截断
+            depthBuffer: false,
+            stencilBuffer: false
+        };
+        let rtA = new THREE.WebGLRenderTarget(SIM_RES, SIM_RES, rtOpts);
+        let rtB = new THREE.WebGLRenderTarget(SIM_RES, SIM_RES, rtOpts);
+
+        // 3. 鼠标交互追踪
+        const mouse = new THREE.Vector2(-10, -10);
+        const lastMouse = new THREE.Vector2(-10, -10);
+        let isMoving = false;
+        let moveTimer;
+
+        function onMove(cx, cy){
+            const rect = canvas.getBoundingClientRect();
+            // 将鼠标坐标转换为 0.0 到 1.0 的 UV 坐标
+            mouse.x = (cx - rect.left) / rect.width;
+            mouse.y = 1.0 - ((cy - rect.top) / rect.height);
+            isMoving = true;
+            
+            clearTimeout(moveTimer);
+            moveTimer = setTimeout(() => { isMoving = false; }, 100);
+        }
+        hero.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+        hero.addEventListener('touchmove', e => onMove(e.touches[0].clientX, e.touches[0].clientY), {passive: true});
+
+        // 4. 波纹模拟 Shader (核心流体逻辑)
+        const simMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                u_tex: { value: null }, // 上一帧的状态
+                u_delta: { value: new THREE.Vector2(1.0/SIM_RES, 1.0/SIM_RES) },
+                u_mouse: { value: mouse },
+                u_lastMouse: { value: lastMouse },
+                u_isMoving: { value: 0.0 }
+            },
+            vertexShader: `
+                varying vec2 vUv;
+                void main() { vUv = uv; gl_Position = vec4(position, 1.0); }
+            `,
+            fragmentShader: `
+                uniform sampler2D u_tex;
+                uniform vec2 u_delta;
+                uniform vec2 u_mouse;
+                uniform vec2 u_lastMouse;
+                uniform float u_isMoving;
+                varying vec2 vUv;
+
+                // 计算点到线段的距离 (用于平滑拖尾)
+                float lineDist(vec2 p, vec2 a, vec2 b) {
+                    vec2 pa = p - a, ba = b - a;
+                    float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+                    return length(pa - ba * h);
+                }
+
+                void main() {
+                    // R通道: 当前高度, G通道: 上一帧高度
+                    float p11 = texture2D(u_tex, vUv).r;
+                    float p10 = texture2D(u_tex, vUv - vec2(u_delta.x, 0.0)).r;
+                    float p12 = texture2D(u_tex, vUv + vec2(u_delta.x, 0.0)).r;
+                    float p01 = texture2D(u_tex, vUv - vec2(0.0, u_delta.y)).r;
+                    float p21 = texture2D(u_tex, vUv + vec2(0.0, u_delta.y)).r;
+
+                    // 波浪方程
+                    // 波纹扩散速度：范围必须在 0.0 到 0.5 之间！
+                    // 数字越小，扩散越慢（像浓稠的流体或慢动作的布料）
+                    float speed = 0.15; 
+
+                    // 完整的波浪方程（分离出邻近像素的拉普拉斯算子）
+                    float laplacian = p10 + p12 + p01 + p21 - 4.0 * p11;
+                    float wave = 2.0 * p11 - texture2D(u_tex, vUv).g + speed * laplacian;
+
+                    wave *= 0.97; // 阻尼系数：决定波纹传播多远，0.985看起来像丝绸/偏稠的液体
+
+                    // 鼠标干扰 (画笔)
+                    if (u_isMoving > 0.5) {
+                        float dist = lineDist(vUv, u_lastMouse, u_mouse);
+                        
+                        // 1. 获取这一帧鼠标移动的真实跨度
+                        float moveDist = distance(u_mouse, u_lastMouse);
+                        
+                        // 2. 丝绸物理限制：速度越快，能量越弱（打滑效应）
+                        // 通过除以移动距离，强制让划动产生的“总能量”保持恒定。
+                        float energy = 0.15;
+                        if (moveDist > 0.001) {
+                            // 当移动跨度超过安全阈值时，大幅削弱注入的深度
+                            energy *= clamp(0.008 / moveDist, 0.0, 1.0);
+                        }
+
+                        if (dist < 0.015) {
+                            wave += energy; 
+                        }
+                    }
+
+                    gl_FragColor = vec4(wave, p11, 0.0, 1.0);
+                }
+            `
+        });
+
+        const simScene = new THREE.Scene();
+        const simQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), simMaterial);
+        simScene.add(simQuad);
+
+        // 5. 最终渲染 Shader (将波纹转化为丝绸质感与墨晕)
+        const silkMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                u_disp: { value: null }, // 波纹高度图
+                u_color: { value: new THREE.Color('#faf7f2') }, // 米色宣纸/丝绸底色
+                u_inkColor: { value: new THREE.Color('#1a1a1a') }, // 墨色
+                u_lightDir: { value: new THREE.Vector3(-1.0, 1.0, 2.0).normalize() },
+                u_resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+            },
+            vertexShader: `
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    gl_Position = vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform sampler2D u_disp;
+                uniform vec3 u_color;
+                uniform vec3 u_inkColor;
+                uniform vec3 u_lightDir;
+                uniform vec2 u_resolution;
+                varying vec2 vUv;
+
+                // 简单的 Hash Noise，用来做毛玻璃/针织颗粒感
+                float hash(vec2 p) {
+                    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+                }
+
+                void main() {
+                    vec2 delta = 1.0 / vec2(512.0); // 对应 FBO 分辨率
+                    
+                    // 读取波纹高度并计算法线 (Normal Mapping)
+                    float h0 = texture2D(u_disp, vUv).r;
+                    float hX = texture2D(u_disp, vUv + vec2(delta.x, 0.0)).r;
+                    float hY = texture2D(u_disp, vUv + vec2(0.0, delta.y)).r;
+                    
+                    // 构造法线，0.08 控制光影凹凸的强度
+                    vec3 normal = normalize(vec3(h0 - hX, h0 - hY, 0.08));
+
+                    // 加入极细微的高频噪点（毛玻璃/针织感）
+                    float grain = hash(vUv * 800.0) * 0.04; 
+                    normal.x += grain;
+                    normal.y += grain;
+                    normal = normalize(normal);
+
+                    // 漫反射光照
+                    float diff = max(dot(normal, u_lightDir), 0.0);
+                    // 模拟丝绸的边缘光泽 (Rim Light)
+                    float rim = 1.0 - max(dot(normal, vec3(0.0, 0.0, 1.0)), 0.0);
+                    rim = smoothstep(0.6, 1.0, rim);
+
+                    // 组合基础颜色与光影
+                    vec3 finalColor = u_color * (diff * 0.6 + 0.5) + vec3(0.1) * rim;
+
+                    // 墨晕叠加：当高度发生较大变化时，显现墨色拖尾
+                    float inkIntensity = smoothstep(0.01, 0.15, abs(h0));
+                    finalColor = mix(finalColor, u_inkColor, inkIntensity * 0.01); // 0.05控制墨迹最深浓度
+
+                    gl_FragColor = vec4(finalColor, 1.0);
+                }
+            `
+        });
+
+        const screenQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), silkMaterial);
+        scene.add(screenQuad);
+
+        // 6. 渲染循环
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // 更新交互状态
+            simMaterial.uniforms.u_isMoving.value = isMoving ? 1.0 : 0.0;
+            simMaterial.uniforms.u_mouse.value.copy(mouse);
+            
+            // 将 A 渲染到 B (计算下一帧流体)
+            simMaterial.uniforms.u_tex.value = rtA.texture;
+            renderer.setRenderTarget(rtB);
+            renderer.render(simScene, camera);
+
+            // 交换缓冲区 Ping-Pong
+            let temp = rtA;
+            rtA = rtB;
+            rtB = temp;
+
+            // 记录最后位置
+            lastMouse.copy(mouse);
+
+            // 渲染最终结果到屏幕
+            silkMaterial.uniforms.u_disp.value = rtA.texture;
+            silkMaterial.uniforms.u_resolution.value.set(window.innerWidth, window.innerHeight);
+            renderer.setRenderTarget(null);
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    })();
+    </script>
+    <script id="exco-js">
+// ── Exco data (replace with fetch() when backend is ready) ──
+const excoData = {
+  president: {
+    name: 'Isaac Chang',
+    role: 'President',
+    pronoun: 'him',
+    about: 'Placeholder — replace with actual bio.',
+    history: [
+      { year: '26/27', name: 'Isaac Chang' },
+      { year: '25/26', name: 'Tan Kai' },
+    ]
+  },
+  vp: {
+    name: 'Aloysius Teo',
+    role: 'Vice President',
+    pronoun: 'him',
+    about: 'Placeholder — replace with actual bio.',
+    history: [
+      { year: '25/26', name: 'Aloysius Teo' },
+      { year: '24/25', name: '—' },
+    ]
+  },
+  secretary: {
+    name: 'Shirlyn Goh',
+    role: 'Secretary Head',
+    pronoun: 'her',
+    about: 'Placeholder — replace with actual bio.',
+    history: [
+      { year: '25/26', name: 'Shirlyn Goh' },
+      { year: '24/25', name: '—' },
+    ]
+  },
+  conductor: {
+    name: 'Beh Pei Zhen',
+    role: 'Student Conductor',
+    pronoun: 'her',
+    about: 'Placeholder — replace with actual bio.',
+    history: [
+      { year: '25/26', name: 'Beh Pei Zhen' },
+      { year: '24/25', name: '—' },
+    ]
+  },
+  concertmaster: {
+    name: 'Cheong Wei Chuan',
+    role: 'Concert Master',
+    pronoun: 'him',
+    about: 'Placeholder — replace with actual bio.',
+    history: [
+      { year: '25/26', name: 'Cheong Wei Chuan' },
+      { year: '24/25', name: '—' },
+    ]
+  },
+  publicity: {
+    name: 'Loo Siong Leng',
+    role: 'Publicity Head',
+    pronoun: 'him',
+    about: 'Placeholder — replace with actual bio.',
+    history: [
+      { year: '25/26', name: 'Loo Siong Leng' },
+      { year: '24/25', name: '—' },
+    ]
+  },
+  qm: {
+    name: 'Yu Yi Yang',
+    role: 'Quarter Master',
+    pronoun: 'him',
+    about: 'Placeholder — replace with actual bio.',
+    history: [
+      { year: '25/26', name: 'Yu Yi Yang' },
+      { year: '24/25', name: '—' },
+    ]
+  },
+  treasurer: {
+    name: 'Koh Jia Xin',
+    role: 'Treasurer',
+    pronoun: 'her',
+    about: 'Placeholder — replace with actual bio.',
+    history: [
+      { year: '25/26', name: 'Koh Jia Xin' },
+      { year: '24/25', name: '—' },
+    ]
+  },
+  logistics: {
+    name: 'Edmund Cheong',
+    role: 'Logistics Head',
+    pronoun: 'him',
+    about: 'Placeholder — replace with actual bio.',
+    history: [
+      { year: '25/26', name: 'Edmund Cheong' },
+      { year: '24/25', name: '—' },
+    ]
+  },
+  librarian: {
+    name: 'Li Xuan',
+    role: 'Librarian',
+    pronoun: 'her',
+    about: 'Placeholder — replace with actual bio.',
+    history: [
+      { year: '25/26', name: 'Li Xuan' },
+      { year: '24/25', name: '—' },
+    ]
+  },
+  events: {
+    name: 'Charlotte Ang',
+    role: 'Event Manager',
+    pronoun: 'her',
+    about: 'Placeholder — replace with actual bio.',
+    history: [
+      { year: '25/26', name: 'Charlotte Ang' },
+      { year: '24/25', name: '—' },
+    ]
+  },
+  welfare: {
+    name: 'Christine Yong',
+    role: 'Welfare Head',
+    pronoun: 'her',
+    about: 'Placeholder — replace with actual bio.',
+    history: [
+      { year: '25/26', name: 'Christine Yong' },
+      { year: '24/25', name: '—' },
+    ]
+  },
+};
+ 
+// ── Ink bleed hover effect ──
+document.querySelectorAll('.exco-row').forEach(row => {
+  const shape = row.querySelector('.exco-ink-shape');
+ 
+  function getRelPos(e, el) {
+    const r = el.getBoundingClientRect();
+    return {
+      x: ((e.clientX - r.left) / r.width  * 100).toFixed(1) + '%',
+      y: ((e.clientY - r.top)  / r.height * 100).toFixed(1) + '%',
+    };
+  }
+ 
+    row.addEventListener('mouseenter', e => {
+    const pos = getRelPos(e, row);
+    shape.style.transformOrigin = `${pos.x} ${pos.y}`;
+    gsap.killTweensOf(shape);
+    gsap.fromTo(shape,
+        { scale: 0 },
+        { 
+        scale: 28, duration: 0.55, ease: 'power2.out',
+        onStart: () => {},
+        // 等扩散到一半再切换文字色
+        onUpdate: function() {
+            if (this.progress() > 0.35) row.classList.add('ink-active');
+        }
+        }
+    );
+    });
+ 
+  row.addEventListener('mouseleave', e => {
+    const pos = getRelPos(e, row);
+    shape.style.transformOrigin = `${pos.x} ${pos.y}`;
+    gsap.killTweensOf(shape);
+    gsap.to(shape, {
+      scale: 0,
+      transformOrigin: `${pos.x} ${pos.y}`,
+      duration: 0.38,
+      ease: 'power2.in',
+      onComplete: () => row.classList.remove('ink-active')
+    });
+  });
+});
+ 
+// ── Card logic ──
+const aboutOverlay  = document.getElementById('excoAboutOverlay');
+const historyOverlay = document.getElementById('excoHistoryOverlay');
+ 
+function openCard(overlay) {
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeCard(overlay) {
+  overlay.classList.remove('active');
+  document.body.style.overflow = '';
+}
+ 
+// Close on backdrop click
+[aboutOverlay, historyOverlay].forEach(ov => {
+  ov.addEventListener('click', e => { if (e.target === ov) closeCard(ov); });
+});
+document.getElementById('closeAbout').addEventListener('click',   () => closeCard(aboutOverlay));
+document.getElementById('closeHistory').addEventListener('click', () => closeCard(historyOverlay));
+ 
+// Close on ESC
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeCard(aboutOverlay);
+    closeCard(historyOverlay);
+  }
+});
+ 
+// Button clicks
+document.querySelectorAll('.exco-row').forEach(row => {
+  const key  = row.dataset.member;
+  const data = excoData[key];
+  if (!data) return;
+ 
+  row.querySelector('.btn-about').addEventListener('click', () => {
+    const t2 = translations[currentLang];
+    document.getElementById('aboutEyebrow').textContent = data.pronoun === 'her' ? (t2.about_her || 'About Her') : (t2.about_him || 'About Him');
+    document.getElementById('aboutName').textContent    = data.name;
+    document.getElementById('aboutRole').textContent    = data.role;
+    document.getElementById('aboutBody').textContent    = data.about;
+    openCard(aboutOverlay);
+  });
+ 
+  row.querySelector('.btn-history').addEventListener('click', () => {
+    const t = translations[currentLang];
+    document.getElementById('historyRole').textContent = t['exco_role_' + row.dataset.member] || data.role;
+    const body = document.getElementById('historyBody');
+    body.innerHTML = '<p class="exco-history-title">' + (t.exco_card_prev || 'Previous Holders') + '</p>' +
+      data.history.map(h => `
+        <div class="exco-history-row">
+          <span class="exco-history-year">${h.year}</span>
+          <span class="exco-history-person">${h.name}</span>
+        </div>`).join('');
+    openCard(historyOverlay);
+  });
+});
+</script>
+</body>
+</html>

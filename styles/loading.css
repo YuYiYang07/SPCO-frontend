@@ -1,0 +1,103 @@
+/* ==========================================================================
+   LOADING & TRANSITION STYLES
+   ========================================================================== */
+
+/* ─── Base Loading Screen ────────────────────────────────────────────────── */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    pointer-events: none;
+    color: #ffffff; /* White text */
+    background-color: #0d0d0a; /* Deep ink background */
+}
+
+/* ─── Animated Logo ──────────────────────────────────────────────────────── */
+.loading-logo .big-o-svg {
+    --o-len: 200; /* Default value, will be updated by JS */
+    --o-end-from: 20;
+    --o-end-to: -180;
+}
+
+.loading-logo .ink-o-main,
+.loading-logo .ink-o-start,
+.loading-logo .ink-o-end {
+    stroke-dasharray: var(--o-len);
+    stroke-dashoffset: var(--o-len);
+}
+
+.loading-logo .ink-o-erase {
+    stroke-dasharray: var(--o-len);
+    stroke-dashoffset: var(--o-len);
+}
+
+/* The main animation sequence for the O */
+.loading-screen.is-active .loading-logo .ink-o-main {
+    animation: draw-o-main 1.8s 0.2s forwards;
+}
+.loading-screen.is-active .loading-logo .ink-o-start {
+    animation: draw-o-start-end 1s 0.1s forwards;
+}
+.loading-screen.is-active .loading-logo .ink-o-end {
+    animation: draw-o-start-end 1.2s 0.3s forwards;
+}
+.loading-screen.is-active .loading-logo .ink-o-erase {
+    animation: draw-o-erase 1.8s 0.3s forwards;
+}
+
+
+/* Keyframes for drawing the 'O' */
+@keyframes draw-o-main {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes draw-o-start-end {
+  0% { stroke-dashoffset: var(--o-len); }
+  40%, 100% { stroke-dashoffset: var(--o-end-to); }
+}
+@keyframes draw-o-erase {
+  0% { stroke-dashoffset: var(--o-len); }
+  99% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+@keyframes spin-o {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ─── Slogan Animation ───────────────────────────────────────────────────── */
+.loading-slogan span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.5s, transform 0.5s;
+}
+
+/* ─── Page Transition Overlay ────────────────────────────────────────────── */
+.transition-svg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 98;
+}
+
+.transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0d0d0a;
+    transform: scale(0);
+    z-index: 99;
+    pointer-events: none;
+    filter: url(#filter-ink-spread);
+}

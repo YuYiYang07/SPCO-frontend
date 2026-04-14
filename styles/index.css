@@ -1,0 +1,813 @@
+.top-nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 60px; z-index: 40;
+  display: flex; align-items: center;
+  justify-content: flex-end;
+  padding: 0 2rem 0 108px; /* leave room for spin badge on left */
+  background: rgba(247,243,236,0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(13,13,10,0.06);
+}
+.nav-links {
+  display: flex; align-items: center; gap: 2rem;
+  list-style: none;
+  margin: 0; padding: 0;
+}
+.nav-links a {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); border: none;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--ink); }
+
+.nav-links li {
+  position: relative;
+  padding: 0.1rem 0 0.1rem 0.7rem;
+}
+
+.nav-links li::before {
+  content: " |";
+  line-height: 1.5;
+  position: absolute; 
+  left: -10px;
+  color: var(--accent); 
+  font-weight: 400;
+}
+
+@media (max-width: 600px) {
+  .top-nav { padding: 0 1.25rem; } 
+}
+
+
+/* ========================================
+BASE & RESET
+======================================== */
+*, *::before, *::after {
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+html {
+     scroll-behavior: smooth; 
+     overflow-x: hidden; 
+}
+
+body {
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
+    background-color: #faf7f2;
+    color: #1a1a1a;
+}
+
+::selection { background: rgba(139,37,0,0.15); color: #1a1a1a; }
+
+/* ========================================
+INK WASH TEXTURE (CSS-only organic shapes)
+======================================== */
+.ink-wash {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.08;
+    pointer-events: none !important;
+}
+
+/* ========================================
+TORN PAPER EDGE (SVG-based)
+======================================== */
+/* .torn-edge-top {
+position: relative;
+}
+.torn-edge-top::before {
+content: '';
+position: absolute;
+top: -30px;
+left: 0;
+right: 0;
+height: 30px;
+background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 30' preserveAspectRatio='none'%3E%3Cpath d='M0,30 Q20,5 40,28 Q60,8 80,25 Q100,2 120,27 Q140,10 160,24 Q180,3 200,28 Q220,7 240,26 Q260,4 280,29 Q300,8 320,25 Q340,2 360,27 Q380,12 400,24 Q420,5 440,28 Q460,9 480,26 Q500,3 520,27 Q540,11 560,25 Q580,4 600,29 Q620,7 640,24 Q660,2 680,28 Q700,10 720,26 Q740,5 760,27 Q780,8 800,25 Q820,3 840,28 Q860,12 880,24 Q900,6 920,27 Q940,9 960,26 Q980,4 1000,28 Q1020,7 1040,25 Q1060,2 1080,27 Q1100,11 1120,24 Q1140,5 1160,28 Q1180,8 1200,26 L1200,30 L0,30 Z' fill='%23faf7f2'/%3E%3C/svg%3E") no-repeat;
+background-size: 100% 100%;
+z-index: 10;
+}
+
+.torn-edge-bottom::after {
+content: '';
+position: absolute;
+bottom: -30px;
+left: 0;
+right: 0;
+height: 30px;
+background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 30' preserveAspectRatio='none'%3E%3Cpath d='M0,0 Q20,25 40,2 Q60,22 80,5 Q100,28 120,3 Q140,20 160,6 Q180,27 200,2 Q220,23 240,4 Q260,26 280,1 Q300,22 320,5 Q340,28 360,3 Q380,18 400,6 Q420,25 440,2 Q460,21 480,4 Q500,27 520,3 Q540,19 560,5 Q580,26 600,1 Q620,23 640,6 Q660,28 680,2 Q700,20 720,4 Q740,25 760,3 Q780,22 800,5 Q820,27 840,2 Q860,18 880,6 Q900,24 920,3 Q940,21 960,4 Q980,26 1000,2 Q1020,23 1040,5 Q1060,28 1080,3 Q1100,19 1120,6 Q1140,25 1160,2 Q1180,22 1200,4 L1200,0 L0,0 Z' fill='%23faf7f2'/%3E%3C/svg%3E") no-repeat;
+background-size: 100% 100%;
+z-index: 10;
+} */
+
+/* ========================================
+NAVBAR
+======================================== */
+.navbar {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 1000;
+padding: 1.25rem 2rem;
+transition: background-color 0.5s ease, backdrop-filter 0.5s ease;
+}
+.navbar.scrolled {
+background-color: rgba(250, 247, 242, 0.92);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+border-bottom: 1px solid rgba(26, 26, 26, 0.06);
+}
+.navbar-title {
+font-family: 'Zhi Mang Xing', cursive;
+transform-origin: left center;
+}
+
+/* ========================================
+HERO
+======================================== */
+#hero {
+min-height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+position: relative;
+overflow: hidden;
+}
+
+.hero-title {
+font-family: 'Zhi Mang Xing', cursive;
+line-height: 1.1;
+}
+
+#heroSubtitle {
+    font-size: 1.45rem; 
+    line-height: 1.75rem;
+}
+
+@media (max-width: 789px) {
+    #heroSubtitle {
+        font-size: 1.1rem; 
+        line-height: 1.2rem;
+    }
+}
+
+/* Ink brush stroke decoration */
+.brush-stroke {
+position: absolute;
+opacity: 0.06;
+pointer-events: none !important;
+}
+
+/* ========================================
+SECTION STYLES
+======================================== */
+section {
+position: relative;
+}
+.section-chinese-title {
+font-family: 'Zhi Mang Xing', cursive;
+}
+
+/* ========================================
+SETTINGS PANEL
+======================================== */
+.settings-panel {
+position: fixed;
+top: 70px;
+left: 20px;
+z-index: 1001;
+background: rgba(250, 247, 242, 0.97);
+backdrop-filter: blur(20px);
+border: 1px solid rgba(26, 26, 26, 0.08);
+border-radius: 12px;
+padding: 1.5rem;
+min-width: 220px;
+box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+transform: translateY(-10px);
+opacity: 0;
+visibility: hidden;
+transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.settings-panel.open {
+transform: translateY(0);
+opacity: 1;
+visibility: visible;
+}
+
+/* ========================================
+FOOTER DRAWER
+======================================== */
+.footer-drawer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    transform: translateY(calc(100% - 50px));
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.footer-drawer.open {
+    transform: translateY(0);
+}
+
+.footer-drawer-tab {
+    cursor: pointer;
+    top: 1px; 
+    height: 51px;
+    bottom: -10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    /* align-items: flex-start; 箭头顶到最上面 */
+}
+
+/* Footer torn paper top edge */
+.footer-torn::before {
+    content: '';
+    position: absolute;
+    /* 这里的数值必须和下面的 height 保持一致（取负数） */
+    top: -48px; 
+    left: 0;
+    right: 0;
+    border-bottom: 0px;
+    margin-bottom: 0px;
+    padding-bottom: 0%;
+    /* 改成你 PNG 图片的实际高度（或者你期望显示的高度） */
+    height: 50px; 
+    
+    background: url("../assets/images/paper_torn_edge_long.png") no-repeat bottom center;
+    
+    /* 关键属性：100% 100% 会强制图片拉伸填满整个容器的宽和高，保证左右绝对不留缝隙 */
+    background-size: 100% 100%; 
+    z-index: 10;
+}
+
+@media (max-width: 768px) {
+    .footer-torn::before {
+        content: '';
+        position: absolute;
+        /* 这里的数值必须和下面的 height 保持一致（取负数） */
+        top: -48px; 
+        left: 0;
+        right: 0;
+        border-bottom: 0px;
+        margin-bottom: 0px;
+        padding-bottom: 0%;
+        /* 改成你 PNG 图片的实际高度（或者你期望显示的高度） */
+        height: 50px; 
+        
+        background: url("../assets/images/paper_torn_edge.png") no-repeat bottom center;
+        
+        /* 关键属性：100% 100% 会强制图片拉伸填满整个容器的宽和高，保证左右绝对不留缝隙 */
+        background-size: 100% 100%; 
+        z-index: 10;
+    }
+}
+
+/* ========================================
+RICE PAPER TEXTURE OVERLAY
+======================================== */
+.rice-paper-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none !important;
+    z-index: 9995;
+    opacity: 0.015;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+}
+
+/* ========================================
+ACHIEVEMENT CARDS
+======================================== */
+.achievement-card {
+background: rgba(255,255,255,0.5);
+border: 1px solid rgba(26,26,26,0.06);
+border-radius: 12px;
+padding: 2rem;
+transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.achievement-card:hover {
+transform: translateY(-4px);
+box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+border-color: rgba(139,37,0,0.12);
+}
+
+/* ========================================
+JOIN CTA BUTTON
+======================================== */
+.cta-btn {
+position: relative;
+overflow: hidden;
+transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cta-btn::before {
+content: '';
+position: absolute;
+top: 0; left: -100%; width: 100%; height: 100%;
+background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+transition: left 0.6s ease;
+}
+.cta-btn:hover::before { left: 100%; }
+.cta-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(139,37,0,0.2); }
+
+/* ========================================
+DIVIDER LINE
+======================================== */
+.ink-divider {
+height: 1px;
+background: linear-gradient(90deg, transparent, rgba(26,26,26,0.15), transparent);
+margin: 0 auto;
+}
+
+/* ========================================
+SCROLL INDICATOR
+======================================== */
+.scroll-indicator {
+position: absolute;
+bottom: 2rem;
+left: 50%;
+transform: translateX(-50%);
+}
+
+.scroll-line {
+width: 1px;
+height: 40px;
+background: linear-gradient(to bottom, rgba(26,26,26,0.3), transparent);
+margin: 0 auto;
+}
+
+/* ========================================
+MOBILE MENU
+======================================== */
+.mobile-menu {
+position: fixed;
+inset: 0;
+z-index: 999;
+background: rgba(250,247,242,0.98);
+backdrop-filter: blur(30px);
+display: flex;
+align-items: center;
+justify-content: center;
+opacity: 0;
+visibility: hidden;
+transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.mobile-menu.open {
+opacity: 1;
+visibility: visible;
+}
+
+/* ========================================
+CUSTOM SCROLLBAR
+======================================== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(26,26,26,0.15); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(26,26,26,0.25); }
+
+/* ========================================
+UTILITY ANIMATIONS
+======================================== */
+@keyframes float {
+0%, 100% { transform: translateY(0px); }
+50% { transform: translateY(-8px); }
+}
+@keyframes inkBleed {
+0% { filter: blur(80px); opacity: 0; }
+100% { filter: blur(80px); opacity: 0.04; }
+}
+.animate-float { animation: float 6s ease-in-out infinite; }
+
+/* Loading screen */
+.loading-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: #faf7f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+:root {
+    --o-len: 232;
+    --o-cycle: 2.4s;
+    --o-start-len: 18;   /* 起笔段长度px */
+    --o-end-len: 20;     /* 收笔段长度px */
+}
+
+/* ── 中段主线 ── */
+.ink-o-main {
+    stroke-dasharray: var(--o-len);
+    stroke-dashoffset: var(--o-len);
+    animation: ink-draw var(--o-cycle) cubic-bezier(0.5, 0, 0.25, 1) infinite,
+               ink-fade var(--o-cycle) ease-in-out infinite;
+}
+
+/* ── 起笔段：截取路径前18px，和主线同步绘制 ──
+   dasharray: 18 9999  → 只显示前18px的笔画
+   dashoffset: 18      → 初始隐藏（offset=长度=全隐）
+   随主线一起 offset→0，但因为只有18px，很快就全显示了
+   视觉效果：落笔的一瞬间有一个粗重的顿点先出现
+*/
+.ink-o-start {
+    stroke-dasharray: var(--o-start-len) 9999;
+    stroke-dashoffset: var(--o-start-len);
+    animation: ink-draw-start var(--o-cycle) cubic-bezier(0.5, 0, 0.25, 1) infinite,
+               ink-fade var(--o-cycle) ease-in-out infinite;
+}
+
+/* ── 收笔段：截取路径最后20px ──
+   dasharray: 20 9999
+   dashoffset: -(总长-20) = 负值，跳过前面，只显示末尾20px
+   但要跟随主线末端一起"长出来"：
+   初始 dashoffset = -(len-end) + len = end（全隐）
+   终态 dashoffset = -(len-end)（显示末尾end长度）
+   
+   所以 offset 变化：end → -(len-end)，变化量 = len
+   → 和主线同款 ink-draw，但 dasharray 只截取末尾段
+*/
+.ink-o-end {
+    stroke-dasharray: var(--o-end-len) 9999;
+    /* 初始：跳过(len-end)之后再隐藏end，即 offset = -(len - end) + len = end */
+    /* 终态：offset = -(len - end)，让末尾20px正好显示 */
+    /* 用JS动态设置，见下方script */
+    stroke-dashoffset: 20; /* fallback，JS会更新 */
+    animation: ink-draw-end var(--o-cycle) cubic-bezier(0.5, 0, 0.25, 1) infinite,
+               ink-fade-end var(--o-cycle) ease-in-out infinite;
+}
+
+/* 毛丝层（同前） */
+.ink-o-wisp-a {
+    stroke-dasharray: calc(var(--o-len) - 10) var(--o-len);
+    stroke-dashoffset: var(--o-len);
+    animation: ink-draw var(--o-cycle) cubic-bezier(0.5, 0, 0.25, 1) infinite,
+               ink-fade var(--o-cycle) ease-in-out infinite;
+}
+.ink-o-wisp-b {
+    stroke-dasharray: calc(var(--o-len) - 20) var(--o-len);
+    stroke-dashoffset: var(--o-len);
+    animation: ink-draw var(--o-cycle) cubic-bezier(0.5, 0, 0.25, 1) infinite,
+               ink-fade var(--o-cycle) ease-in-out infinite;
+}
+.ink-o-wisp-c {
+    stroke-dasharray: calc(var(--o-len) - 32) var(--o-len);
+    stroke-dashoffset: var(--o-len);
+    animation: ink-draw var(--o-cycle) cubic-bezier(0.5, 0, 0.25, 1) infinite,
+               ink-fade var(--o-cycle) ease-in-out infinite;
+}
+
+.ink-o-erase {
+    stroke-dasharray: var(--o-len);
+    stroke-dashoffset: var(--o-len);
+    animation: ink-erase var(--o-cycle) cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.big-o-svg {
+    transform: skewX(-5deg);
+}
+
+/* ── Keyframes ── */
+
+@keyframes ink-draw {
+    0%   { stroke-dashoffset: var(--o-len); }
+    65%  { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: 0; }
+}
+
+/* 起笔段：offset 从 start-len → 0，走完就停（笔触太短，很快全显） */
+@keyframes ink-draw-start {
+    0%   { stroke-dashoffset: var(--o-start-len); }
+    65%  { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: 0; }
+}
+
+/* 收笔段：跟随主线末端一起长出
+   offset: end-len → -(len - end-len)
+   JS会把 --o-end-offset-from 和 --o-end-offset-to 写入 :root */
+@keyframes ink-draw-end {
+    0%   { stroke-dashoffset: var(--o-end-from); }
+    65%  { stroke-dashoffset: var(--o-end-to); }
+    100% { stroke-dashoffset: var(--o-end-to); }
+}
+
+/* 收笔段淡入：主线画到80%时才出现（末端接近时才显） */
+@keyframes ink-fade-end {
+    0%   { opacity: 0; }
+    50%  { opacity: 0; }   /* 主线画到~77%时才让收笔段出现 */
+    58%  { opacity: 1; }
+    72%  { opacity: 1; }
+    97%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes ink-fade {
+    0%   { opacity: 0; }
+    5%   { opacity: 1; }
+    72%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes ink-erase {
+    0%   { stroke-dashoffset: var(--o-len); }
+    75%  { stroke-dashoffset: var(--o-len); }
+    97%  { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: 0; }
+}
+/* ========================================
+SILK CANVAS — hero background
+======================================== */
+#hero {
+    /* ensure hero has a defined height so canvas fills it */
+    min-height: 100vh;
+}
+#silkCanvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    display: block;
+    pointer-events: auto; /* receives mouse for cloth interaction */
+}
+
+/* ========================================
+SILK CANVAS — hero background
+全屏覆盖，不露边
+======================================== */
+#hero {
+    min-height: 100vh;
+    /* 确保 section 本身也没有 padding 把 canvas 挤开 */
+}
+
+#silkCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 0;
+    display: block;
+    pointer-events: auto;
+    /* 负 margin 抵消父元素可能的 padding/border */
+    margin-left: calc(-1 * (100vw - 100%) / 2);
+}
+
+/* Mobile: 降低物理精度靠 JS 的 SEGS 参数控制，
+   CSS 这里只确保全屏不留白 */
+@media (max-width: 768px) {
+    #silkCanvas {
+        width: 100vw !important;
+        height: 100svh !important; /* small viewport height on mobile */
+    }
+}
+
+/* ── Exco row ── */
+.exco-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 1rem;
+  border-bottom: 1px dotted rgba(13,13,10,0.18);
+  /* NO overflow:hidden — was clipping buttons */
+  cursor: default;
+  background: transparent;
+  transition: background 0.25s ease;
+}
+.exco-row:hover {
+  background: #1a1a1a;
+}
+
+/* hide ink elements — no longer used */
+.exco-ink { display: none; }
+
+/* Left: role + name */
+.exco-left {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.exco-role {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition: color 0.25s;
+}
+.exco-row:hover .exco-role { color: #f7f3ec; }
+
+.exco-name {
+  font-family: 'Meddon', cursive;
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  color: var(--gold);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.25s;
+}
+.exco-row:hover .exco-name { color: #c9a84c; }
+
+/* Right: buttons */
+.exco-btns {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  margin-left: 1.5rem;
+}
+
+.exco-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid rgba(13,13,10,0.3);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.exco-btn:hover {
+  background: var(--ink);
+  color: #f7f3ec;
+  border-color: var(--ink);
+}
+
+/* history btn: filled by default */
+.exco-btn.btn-history {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+.exco-btn.btn-history:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* on hovered row, invert btn colours */
+.exco-row:hover .exco-btn {
+  border-color: rgba(247,243,236,0.45);
+  color: #f7f3ec;
+  background: transparent;
+}
+.exco-row:hover .exco-btn:hover {
+  background: #f7f3ec;
+  color: var(--ink);
+  border-color: #f7f3ec;
+}
+.exco-row:hover .exco-btn.btn-history {
+  background: rgba(247,243,236,0.15);
+  border-color: rgba(247,243,236,0.5);
+  color: #f7f3ec;
+}
+.exco-row:hover .exco-btn.btn-history:hover {
+  background: #f7f3ec;
+  color: var(--ink);
+}
+ 
+/* ── Overlay cards (about + history) ── */
+.exco-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(13,13,10,0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.exco-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+ 
+.exco-card {
+  background: rgba(247,243,236,0.96);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(13,13,10,0.09);
+  box-shadow:
+    0 4px 16px rgba(13,13,10,0.06),
+    0 20px 48px rgba(13,13,10,0.1);
+  width: 100%;
+  max-width: 480px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 2.25rem 2.25rem 2rem;
+  transform: translateY(16px);
+  transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+  position: relative;
+}
+.exco-overlay.active .exco-card {
+  transform: translateY(0);
+}
+ 
+.exco-card-close {
+  position: absolute;
+  top: 1.1rem; right: 1.1rem;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  background: none; border: none; cursor: pointer;
+  color: var(--muted, #8a837a);
+  transition: color 0.2s;
+}
+.exco-card-close:hover { color: var(--accent, #9e2016); }
+.exco-card-close svg {
+  width: 16px; height: 16px;
+  stroke: currentColor; fill: none;
+  stroke-width: 1.8; stroke-linecap: round;
+}
+ 
+.exco-card-eyebrow {
+  font-family: 'Inter', sans-serif;
+  font-size: 8.5px; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent, #9e2016);
+  margin-bottom: 0.4rem;
+}
+.exco-card-name {
+  font-family: 'Meddon', cursive;
+  font-size: 1.9rem;
+  color: var(--ink, #0d0d0a);
+  line-height: 1.1;
+  margin-bottom: 0.25rem;
+}
+.exco-card-role {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted, #8a837a);
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(13,13,10,0.07);
+}
+.exco-card-body {
+  font-family: 'Lora', serif;
+  font-size: 0.875rem;
+  color: rgba(13,13,10,0.7);
+  line-height: 1.8;
+}
+ 
+/* History card specifics */
+.exco-history-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 8.5px; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ink, #0d0d0a);
+  margin: 1.5rem 0 0.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(13,13,10,0.07);
+}
+.exco-history-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+  border-bottom: 1px dotted rgba(13,13,10,0.1);
+}
+.exco-history-year {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--muted, #8a837a);
+  flex-shrink: 0;
+  margin-right: 1rem;
+}
+.exco-history-person {
+  font-family: 'Meddon', cursive;
+  font-size: 1.1rem;
+  color: var(--gold, #c9a84c);
+}
+ 
+/* ── SVG ink filter (hidden, global) ── */
+.exco-svg-filters { position: absolute; width: 0; height: 0; overflow: hidden; }
+ 
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .exco-row { flex-direction: column; align-items: flex-start; gap: 0.75rem; padding: 1rem 0.5rem; }
+  .exco-btns { margin-left: 0; }
+  .exco-left { flex-wrap: wrap; gap: 0.4rem; }
+  .exco-name { font-size: 1.25rem; }
+  .exco-card { padding: 1.75rem 1.25rem 1.5rem; }
+  .exco-card-name { font-size: 1.5rem; }
+}
