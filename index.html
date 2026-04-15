@@ -155,7 +155,7 @@
         <div class="relative z-10 text-center px-6 max-w-4xl mx-auto" style="z-index:4;">
             <!-- Chinese calligraphic title -->
             <h1 id="heroTitle" class="hero-title text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-ink mb-4">
-                <img src="./assets/images/spco.png" alt="華樂"  class="mx-auto max-h-[50vh] max-w-[68vw] block">
+                <img src="./assets/images/spco.png" alt="华乐"  class="mx-auto max-h-[50vh] max-w-[68vw] block">
             </h1>
 
             <!-- English subtitle -->
@@ -219,15 +219,15 @@
                 <!-- Card 1 -->
                 <div class="achievement-card ach-card">
                     <div class="text-3xl font-brush text-accent/60 mb-3">壹</div>
-                    <h3 class="text-lg font-medium text-ink mb-2" data-i18n="ach_card1_title">Singapore Youth Festival</h3>
-                    <p class="text-sm font-light text-ink/50 leading-relaxed" data-i18n="ach_card1_desc">Consistently recognised with the Certificate of Distinction at the Singapore Youth Festival Arts Presentation, a testament to our musical excellence.</p>
+                    <h3 class="text-lg font-medium text-ink mb-2" data-i18n="ach_card1_title">Awards</h3>
+                    <p class="text-sm font-light text-ink/50 leading-relaxed" data-i18n="ach_card1_desc">Since 1998, the organization has received numerous honors, including the school's Outstanding Club Award and the Community Contribution Award.</p>
                 </div>
 
                 <!-- Card 2 -->
                 <div class="achievement-card ach-card">
                     <div class="text-3xl font-brush text-accent/60 mb-3">贰</div>
                     <h3 class="text-lg font-medium text-ink mb-2" data-i18n="ach_card2_title">Cultural Performances</h3>
-                    <p class="text-sm font-light text-ink/50 leading-relaxed" data-i18n="ach_card2_desc">Invited performers at prestigious events including National Day celebrations, Esplanade showcases, and inter-polytechnic cultural festivals.</p>
+                    <p class="text-sm font-light text-ink/50 leading-relaxed" data-i18n="ach_card2_desc">Invited performers at prestigious events including Chinese New Year festival, Art Fiesta and the exxchange programme between polytechnics</p>
                 </div>
 
                 <!-- Card 3 -->
@@ -422,7 +422,8 @@
       <p class="exco-card-eyebrow" id="aboutEyebrow">About</p>
       <h3 class="exco-card-name" id="aboutName"></h3>
       <p class="exco-card-role" id="aboutRole"></p>
-      <div class="exco-card-body" id="aboutBody"></div>
+      <!-- 添加 whitespace-pre-wrap 支持 \n 换行 -->
+      <div class="exco-card-body whitespace-pre-wrap" id="aboutBody"></div>
     </div>
   </div>
  
@@ -621,8 +622,8 @@
                 about_p3: 'SPCO is more than an orchestra — it is a family, a classroom, and a stage where young musicians discover the beauty of Chinese orchestral traditions.',
                 ach_title_cn: '荣誉成就',
                 ach_title: 'Achievements & Recognition',
-                ach_card1_title: 'Singapore Youth Festival',
-                ach_card1_desc: 'Consistently recognised with the Certificate of Distinction at the Singapore Youth Festival Arts Presentation, a testament to our musical excellence.',
+                ach_card1_title: 'Awards',
+                ach_card1_desc: "Since 1998, the organization has received numerous honors, including the school's Outstanding Club Award and the Community Contribution Award.",
                 ach_card2_title: 'Cultural Performances',
                 ach_card2_desc: 'Invited performers at prestigious events including National Day celebrations, Esplanade showcases, and inter-polytechnic cultural festivals.',
                 ach_card3_title: 'Community Outreach',
@@ -687,10 +688,10 @@
                 about_p3: 'SPCO不仅是一个乐团——它是一个家庭、一间教室、一个年轻乐手发现中国管弦乐传统之美的舞台',
                 ach_title_cn: '荣誉成就',
                 ach_title: '',
-                ach_card1_title: '新加坡青年节',
-                ach_card1_desc: '在新加坡青年节艺术展演中持续获得杰出证书，证明了我们的音乐卓越水平',
+                ach_card1_title: '学校奖项',
+                ach_card1_desc: '从1998年开始一直拿奖，拿奖拿到手软，优秀社团奖、社区贡献奖等等，多到仓库放不下',
                 ach_card2_title: '文化演出',
-                ach_card2_desc: '受邀在国庆庆典、滨海艺术中心演出及各理工学院文化节等重要活动中表演',
+                ach_card2_desc: '受邀在中国新年等重要文化节日场合表演节目，是学校Art Fiesta大的重头戏, 是理工学院之间学生交流的压轴题',
                 ach_card3_title: '社区推广',
                 ach_card3_desc: '通过慈善音乐会、学校访问和公众参与活动，积极将华乐带入更广泛的社区',
                 vis_title_cn: '愿景展望',
@@ -725,7 +726,7 @@
                 exco_role_vp: "副会长",
                 exco_role_secretary: "秘书长",
                 exco_role_conductor: "学生指挥",
-                exco_role_concertmaster: "乐团首席 | 第一高胡乐手",
+                exco_role_concertmaster: "乐团首席",
                 exco_role_publicity: "宣传部长",
                 exco_role_qm: "后勤部长",
                 exco_role_treasurer: "财务部长",
@@ -1227,130 +1228,137 @@
     })();
     </script>
     <script id="exco-js">
-// ── Exco data (replace with fetch() when backend is ready) ──
+// ── Exco data ──
 const excoData = {
   president: {
     name: 'Isaac Chang',
     role: 'President',
     pronoun: 'him',
-    about: 'As the president of the SP Chinese Orchestra, I take on a leadership role that requires vision, responsibility, and strong commitment. I am dedicated to guiding the orchestra towards both musical excellence and cohesive teamwork, ensuring that every member feels valued and motivated.\nI work closely with the committee and musicians to plan rehearsals, organize performances, and set clear goals for the group. Through effective communication and coordination, I strive to create a supportive environment where individuals can grow while contributing to the collective success of the orchestra.\nBeing president has strengthened my leadership, decision-making, and problem-solving skills. I approach challenges with resilience and a proactive mindset, always aiming to uphold high standards and bring out the best in the team.
-',
+    about_en: 'A president of SPCO, a musician learning to be more capable',
+    about_zh: 'SPCO现任会长，一个正在学习如何变得更有能力的音乐人。',
     history: [
       { year: '26/27', name: 'Isaac Chang' },
-      { year: '25/26', name: 'Tan Kai' },
+      { year: '25/26', name: 'Thaddaeus Tan' },
     ]
   },
   vp: {
     name: 'Aloysius Teo',
     role: 'Vice President',
     pronoun: 'him',
-    about: 'Aloysius is the Vice President of the Chinese Orchestra and a dedicated yangqin (Chinese dulcimer) player. He supports rehearsals and performances, fosters teamwork, and helps strengthen the orchestra’s overall quality and unity.',
+    about_en: 'Aloysius is the Vice President of the Chinese Orchestra and a dedicated yangqin (Chinese dulcimer) player. He supports rehearsals and performances, fosters teamwork, and helps strengthen the orchestra’s overall quality and unity.',
+    about_zh: 'Aloysius 是华乐团的副会长，也是一名专注的扬琴乐手。他协助排练和演出，促进团队合作，帮助提升乐团的整体质量和凝聚力。',
     history: [
-      { year: '25/26', name: 'Aloysius Teo' },
-      { year: '24/25', name: 'Shi Ya' },
+      { year: '26/27', name: 'Aloysius Teo' },
+      { year: '25/26', name: 'Shi Ya' },
     ]
   },
   secretary: {
     name: 'Shirlyn Goh',
     role: 'Secretary Head',
     pronoun: 'her',
-    about: 'I am a dedicated and passionate pipa player, currently serving as the main secretary of the SP Chinese Orchestra. Through years of musical training, I have developed strong discipline, attention to detail, and a deep appreciation for traditional Chinese music. As a performer, I strive for both technical excellence and expressive depth, constantly refining my skills to contribute meaningfully to the ensemble.\nIn my role as main secretary, I take responsibility for coordinating administrative tasks, supporting communication within the orchestra, and ensuring that activities run smoothly. This position has strengthened my organizational abilities, teamwork, and sense of responsibility.\nI am committed, reliable, and always willing to put in the effort needed to achieve both personal and collective goals. Whether in music or leadership, I approach every task with dedication and a positive attitude, aiming to grow continuously and contribute to the success of the orchestra.',
+    about_en: 'I am a dedicated and passionate pipa player, currently serving as the main secretary of the SP Chinese Orchestra. Through years of musical training, I have developed strong discipline, attention to detail, and a deep appreciation for traditional Chinese music. As a performer, I strive for both technical excellence and expressive depth, constantly refining my skills to contribute meaningfully to the ensemble.\nIn my role as main secretary, I take responsibility for coordinating administrative tasks, supporting communication within the orchestra, and ensuring that activities run smoothly. This position has strengthened my organizational abilities, teamwork, and sense of responsibility.\nI am committed, reliable, and always willing to put in the effort needed to achieve both personal and collective goals. Whether in music or leadership, I approach every task with dedication and a positive attitude, aiming to grow continuously and contribute to the success of the orchestra.',
+    about_zh: '我是一名专注且充满热情的琵琶乐手，目前担任新加坡理工学院华乐团的秘书长。通过多年的音乐训练，我培养了严明的纪律性、对细节的关注以及对中国传统音乐的深刻理解。作为表演者，我追求技术上的卓越和情感的深度表达，不断磨练技艺以为乐团做出有意义的贡献。\n作为秘书长，我负责协调行政事务，支持乐团内部沟通，确保各项活动顺利进行。这个职位增强了我的组织能力、团队协作精神和责任感。\n我积极可靠，始终愿意为实现个人和集体目标付出努力。无论是音乐还是管理，我都以专注和积极的态度面对每一项任务，希望能不断成长并为乐团的成功贡献力量。',
     history: [
-      { year: '25/26', name: 'Shirlyn Goh' },
-      { year: '24/25', name: 'Shi Ya' },
+      { year: '26/27', name: 'Shirlyn Goh' },
+      { year: '25/26', name: 'Shi Ya' },
     ]
   },
   conductor: {
     name: 'Beh Pei Zhen',
     role: 'Student Conductor',
     pronoun: 'her',
-    about: 'started playing in CO in secdondary school. currently the part of huqin section ...... ',
+    about_en: 'started playing in CO in secdondary school. currently the part of huqin section ...... ',
+    about_zh: '从中学开始加入华乐团。目前是胡琴声部的一员......',
     history: [
-      { year: '25/26', name: 'Beh Pei Zhen' },
-      { year: '24/25', name: 'Ashley' },
+      { year: '26/27', name: 'Beh Pei Zhen' },
+      { year: '25/26', name: 'Ashley' },
     ]
   },
   concertmaster: {
     name: 'Cheong Wei Chuan',
     role: 'Concert Master',
     pronoun: 'him',
-    about: '- Studying Diploma in Aeronautical Engineering\n- ⁠Previous music endeavour was in canto-rock and western rock music playing guitar\n- ⁠Started playing Erhu only in 2025 and has been continuously learning since',
+    about_en: '- Studying Diploma in Aeronautical Engineering\n- ⁠Previous music endeavour was in canto-rock and western rock music playing guitar\n- ⁠Started playing Erhu only in 2025 and has been continuously learning since',
+    about_zh: '- 就读于航空工程文凭专业\n- 之前从事粤语摇滚和西方摇滚音乐，担任吉他手\n- 2025年才开始学习二胡，此后一直在坚持练习',
     history: [
-      { year: '25/26', name: 'Cheong Wei Chuan' },
-      { year: '24/25', name: 'Yeong Yu Teng' },
+      { year: '26/27', name: 'Cheong Wei Chuan' },
+      { year: '25/26', name: 'Yeong Yu Teng' },
     ]
   },
   publicity: {
     name: 'Loo Siong Leng',
     role: 'Publicity Head',
     pronoun: 'him',
-    about: 'Placeholder — replace with actual bio.',
+    about_en: 'passionate musician who loves to play and compose music, and also loves procrastinating',
+    about_zh: '一个热爱演奏和作曲的充满热情的音乐人，同时也热爱拖延',
     history: [
-      { year: '25/26', name: 'Loo Siong Leng' },
-      { year: '24/25', name: 'Chang Zee Yee' },
+      { year: '26/27', name: 'Loo Siong Leng' },
+      { year: '25/26', name: 'Chang Zee Yee' },
     ]
   },
   qm: {
     name: 'Yu Yi Yang',
     role: 'Quarter Master',
     pronoun: 'him',
-    about: 'Placeholder — replace with actual bio.',
+    about_en: 'https://yuyiyang.me/\nCreativity*sustainability*reliability',
+    about_zh: 'https://yuyiyang.me/\n可创新 * 可持续 * 可信赖',
     history: [
-      { year: '25/26', name: 'Yu Yi Yang' },
-      { year: '24/25', name: '—' },
+      { year: '26/27', name: 'Yu Yi Yang' },
+      { year: '25/26', name: 'Lim Xu Kang' },
     ]
   },
   treasurer: {
     name: 'Koh Jia Xin',
     role: 'Treasurer',
     pronoun: 'her',
-    about: 'Placeholder — replace with actual bio.',
+    about_en: 'Jia Xin is the treasurer and plucking sl of spco. She leads her section during training and handles the finances in the club.',
+    about_zh: 'Jia Xin是SPCO的财务部长兼弹拨乐声部长。她在排练中带领她的声部，并负责处理社团的财务事务。',
     history: [
-      { year: '25/26', name: 'Koh Jia Xin' },
-      { year: '24/25', name: '—' },
+      { year: '26/27', name: 'Koh Jia Xin' },
+      { year: '25/26', name: 'Lu Jun Hong' },
     ]
   },
   logistics: {
     name: 'Edmund Cheong',
     role: 'Logistics Head',
     pronoun: 'him',
-    about: 'Placeholder — replace with actual bio.',
+    about_en: 'Edmund is responsible for managing the logistics of the orchestra, ensuring that instruments, equipment, and rehearsal spaces are well-prepared for every session. He works behind the scenes to support smooth operations and is known for being dependable and detail-oriented.',
+    about_zh: 'Edmund负责管理乐团的后勤工作，确保乐器、设备和排练场地在每次练习前都准备妥当。他在幕后默默付出以支持乐团的顺利运作，以可靠和注重细节而闻名。',
     history: [
-      { year: '25/26', name: 'Edmund Cheong' },
-      { year: '24/25', name: '—' },
+        { year: '26/27', name: 'Edmund Cheong' },
     ]
   },
   librarian: {
     name: 'Li Xuan',
     role: 'Librarian',
     pronoun: 'her',
-    about: 'Placeholder — replace with actual bio.',
+    about_en: 'Li Xuan oversees the organization and maintenance of the orchestra’s music library. She ensures that scores are properly distributed and archived, supporting both rehearsals and performances with efficiency and care.',
+    about_zh: 'Li Xuan负责乐团曲谱库的组织与维护。她确保乐谱的正确分发和存档，以高效和细心的态度支持排练及演出。',
     history: [
-      { year: '25/26', name: 'Li Xuan' },
-      { year: '24/25', name: '—' },
+      { year: '26/27', name: 'Li Xuan' },
     ]
   },
   events: {
     name: 'Charlotte Ang',
     role: 'Event Manager',
     pronoun: 'her',
-    about: 'Placeholder — replace with actual bio.',
+    about_en: 'Charlotte manages and coordinates events for the orchestra, from concerts to internal activities. She plays a key role in planning and execution, ensuring that each event runs smoothly and creates a meaningful experience for both members and audiences.',
+    about_zh: 'Charlotte负责管理和协调乐团的各项活动，从音乐会到内部活动。她在策划和执行中发挥着关键作用，确保每场活动都能顺利进行，并为团员和观众创造难忘的体验。',
     history: [
-      { year: '25/26', name: 'Charlotte Ang' },
-      { year: '24/25', name: '—' },
+      { year: '26/27', name: 'Charlotte Ang' },
     ]
   },
   welfare: {
     name: 'Christine Yong',
     role: 'Welfare Head',
     pronoun: 'her',
-    about: 'Placeholder — replace with actual bio.',
+    about_en: 'Christine looks after the well-being of orchestra members, fostering a supportive and inclusive environment. She organizes welfare initiatives and ensures that members feel cared for, helping to strengthen the overall cohesion of the group.',
+    about_zh: 'Christine照顾乐团成员的福利，致力于营造一个支持性强和包容的环境。她组织各类福利活动，确保成员感受到关怀，从而增强团队的整体凝聚力。',
     history: [
-      { year: '25/26', name: 'Christine Yong' },
-      { year: '24/25', name: '—' },
+    { year: '25/26', name: 'Christine Yong' },
     ]
-  },
-};
+  }
+}
  
 // ── Ink bleed hover effect ──
 document.querySelectorAll('.exco-row').forEach(row => {
@@ -1433,8 +1441,14 @@ document.querySelectorAll('.exco-row').forEach(row => {
     const t2 = translations[currentLang];
     document.getElementById('aboutEyebrow').textContent = data.pronoun === 'her' ? (t2.about_her || 'About Her') : (t2.about_him || 'About Him');
     document.getElementById('aboutName').textContent    = data.name;
-    document.getElementById('aboutRole').textContent    = data.role;
-    document.getElementById('aboutBody').textContent    = data.about;
+    
+    // 多语言化职位信息
+    document.getElementById('aboutRole').textContent    = t2['exco_role_' + key] || data.role;
+    
+    // 多语言化和显示详细介绍文字 (支持换行在 html 已用 whitespace-pre-wrap 开启)
+    const aboutText = data['about_' + currentLang] || data.about_en || '';
+    document.getElementById('aboutBody').textContent    = aboutText;
+
     openCard(aboutOverlay);
   });
  
