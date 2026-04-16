@@ -530,7 +530,7 @@ function buildBrandHTML(lang) {
 const NAV_LABELS = {
   en: {
     home:       'Home',
-    sectional:  'Sectional',
+    sectional:  'Sections',
     news:       'News',
     works:      'Works',
     lang:       'Language',
